@@ -1,0 +1,100 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.mxspace.ivassistant'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 22
+        targetSdk 33
+
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+        }
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['src/main/jniLibs/baidu']
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+//    packagingOptions {
+//        // for google tts
+////        pickFirst 'META-INF/io.netty.versions.properties'
+////        pickFirst 'META-INF/DEPENDENCIES'
+////        pickFirst 'META-INF/INDEX.LIST'
+//
+//        jniLibs {
+//            // baidu libs
+//            keepDebugSymbols "**/*/libvad.dnn.so"
+//            keepDebugSymbols "**/*/libbd_easr_s1_merge_normal_20151216.dat.so"
+//        }
+//    }
+}
+
+dependencies {
+//    api fileTree(dir: 'libs', include: ['**/*.jar'])
+//    api fileTree("libs") {
+//        include "**/*.jar"
+//    }
+    api(files("libs/ali/nuisdk-release.aar"))
+
+    // network
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
+
+    // ali libs
+    implementation("com.aliyun:aliyun-java-sdk-core:3.7.1")
+    implementation("com.alibaba.nls:nls-sdk-common:2.1.6") {
+        exclude group: 'com.alibaba', module: 'fastjson'
+        exclude group: 'io.netty', module: 'netty-handler'
+        exclude group: 'io.netty', module: 'netty-codec'
+        exclude group: 'io.netty', module: 'netty-codec-http'
+        exclude group: 'io.netty', module: 'netty-buffer'
+        exclude group: 'io.netty', module: 'netty-transport'
+        exclude group: 'io.netty', module: 'netty-resolver'
+    }
+    implementation("javax.xml.bind:jaxb-api:2.3.1")
+    implementation("com.sun.xml.bind:jaxb-core:2.3.0")
+    implementation("com.sun.xml.bind:jaxb-impl:2.3.0") // jaxb-impl must be 2.3.0, otherwise will cause error
+    implementation("xerces:xercesImpl:2.12.0")
+
+    implementation("com.alibaba:fastjson:1.1.46.android")
+//    implementation("com.thoughtworks.smart-assistant:nuisdk:0.1.0")
+
+    // picovoice
+//    implementation("ai.picovoice:porcupine-android:2.2.0")
+
+    // google
+//    implementation("com.google.cloud:google-cloud-texttospeech:2.19.0")
+//    implementation("io.grpc:grpc-okhttp:1.55.1")
+
+    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
