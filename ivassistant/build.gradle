@@ -21,6 +21,7 @@ android {
 
     sourceSets {
         main {
+            // baidu
             jniLibs.srcDirs = ['src/main/jniLibs/baidu']
         }
     }
@@ -39,26 +40,15 @@ android {
         jvmTarget = '1.8'
     }
 
-//    packagingOptions {
-//        // for google tts
-////        pickFirst 'META-INF/io.netty.versions.properties'
-////        pickFirst 'META-INF/DEPENDENCIES'
-////        pickFirst 'META-INF/INDEX.LIST'
-//
-//        jniLibs {
-//            // baidu libs
-//            keepDebugSymbols "**/*/libvad.dnn.so"
-//            keepDebugSymbols "**/*/libbd_easr_s1_merge_normal_20151216.dat.so"
-//        }
-//    }
+    packagingOptions {
+        doNotStrip "*/*/libvad.dnn.so"
+        doNotStrip "*/*/libbd_easr_s1_merge_normal_20151216.dat.so"
+    }
 }
 
 dependencies {
-//    api fileTree(dir: 'libs', include: ['**/*.jar'])
-//    api fileTree("libs") {
-//        include "**/*.jar"
-//    }
-    api(files("libs/ali/nuisdk-release.aar"))
+    api(fileTree(dir: 'libs', include: ['**/*.jar', '**/*.aar']))
+//    api(files("libs/ali/nuisdk-release.aar"))
 
     // network
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -82,7 +72,6 @@ dependencies {
     implementation("xerces:xercesImpl:2.12.0")
 
     implementation("com.alibaba:fastjson:1.1.46.android")
-//    implementation("com.thoughtworks.smart-assistant:nuisdk:0.1.0")
 
     // picovoice
 //    implementation("ai.picovoice:porcupine-android:2.2.0")

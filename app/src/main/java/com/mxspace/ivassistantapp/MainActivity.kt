@@ -25,12 +25,15 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.mxspace.ivassistant.IVAssistant
 import com.mxspace.ivassistant.abilities.asr.Asr
 import com.mxspace.ivassistant.abilities.asr.AsrCallback
+import com.mxspace.ivassistant.abilities.asr.AsrType
 import com.mxspace.ivassistant.abilities.tts.Tts
 import com.mxspace.ivassistant.abilities.tts.TtsCallback
 import com.mxspace.ivassistant.abilities.tts.TtsType
+import com.mxspace.ivassistant.abilities.wakeup.WakeUp
+import com.mxspace.ivassistant.abilities.wakeup.WakeUpCallback
+import com.mxspace.ivassistant.abilities.wakeup.WakeUpType
 import com.mxspace.ivassistantapp.ui.theme.IvassistantandroidTheme
 import com.mxspace.ivassistantapp.utils.MultiplePermissions
-import com.thoughtworks.assistant.abilities.asr.AsrType
 
 class MainActivity : ComponentActivity() {
     companion object {
@@ -40,6 +43,7 @@ class MainActivity : ComponentActivity() {
     private val ivAssistant = IVAssistant(this)
     private lateinit var tts: Tts
     private lateinit var asr: Asr
+    private lateinit var wakeUp: WakeUp
 
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +65,8 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onDestroy() {
+        wakeUp.stop()
+        wakeUp.release()
         tts.release()
         asr.release()
         ivAssistant.release()
@@ -70,6 +76,31 @@ class MainActivity : ComponentActivity() {
     private fun initialize() {
         createTts()
         createAsr()
+        createWakeUp()
+    }
+
+    private fun createWakeUp() {
+        wakeUp = ivAssistant.createWakeUp(
+            WakeUpType.Baidu,
+            mapOf(
+                Pair("kws-file", "assets:///WakeUp.bin"),
+            )
+        )
+        wakeUp.initialize(object : WakeUpCallback {
+            override fun onSuccess() {
+                Log.d(TAG, "wakeUp onSuccess")
+                tts.play("我在")
+                asr.startListening()
+            }
+
+            override fun onError(errorCode: Int, errorMessage: String) {
+                Log.e(TAG, "errorCode: $errorCode, errorMessage: $errorMessage")
+            }
+
+            override fun onStop() {
+                Log.d(TAG, "wakeUp onStop")
+            }
+        })
     }
 
     private fun createAsr() {
@@ -153,6 +184,7 @@ class MainActivity : ComponentActivity() {
                     .width(200.dp)
                     .wrapContentHeight(),
                 onClick = {
+                    wakeUp.start()
                 }
             ) {
                 Text(text = stringResource(id = R.string.wake_up))
