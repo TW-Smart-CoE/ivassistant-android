@@ -21,11 +21,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.mxspace.ivassistant.IVAssistant
+import com.mxspace.ivassistant.abilities.asr.Asr
+import com.mxspace.ivassistant.abilities.asr.AsrCallback
 import com.mxspace.ivassistant.abilities.tts.Tts
 import com.mxspace.ivassistant.abilities.tts.TtsCallback
 import com.mxspace.ivassistant.abilities.tts.TtsType
 import com.mxspace.ivassistantapp.ui.theme.IvassistantandroidTheme
+import com.mxspace.ivassistantapp.utils.MultiplePermissions
+import com.thoughtworks.assistant.abilities.asr.AsrType
 
 class MainActivity : ComponentActivity() {
     companion object {
@@ -34,7 +39,9 @@ class MainActivity : ComponentActivity() {
 
     private val ivAssistant = IVAssistant(this)
     private lateinit var tts: Tts
+    private lateinit var asr: Asr
 
+    @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initialize()
@@ -42,6 +49,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             IvassistantandroidTheme {
                 // A surface container using the 'background' color from the theme
+                MultiplePermissions()
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -54,14 +62,45 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         tts.release()
+        asr.release()
+        ivAssistant.release()
         super.onDestroy()
     }
 
     private fun initialize() {
+        createTts()
+        createAsr()
+    }
+
+    private fun createAsr() {
+        asr = ivAssistant.createAsr(
+            AsrType.Ali,
+            mapOf(
+                Pair("enable_voice_detection", true),
+                Pair("max_start_silence", 10000),
+                Pair("max_end_silence", 800),
+            )
+        )
+        asr.initialize(object : AsrCallback {
+            override fun onResult(text: String) {
+                Log.d(TAG, "onResult: $text")
+                tts.play(text)
+            }
+
+            override fun onError(errorMessage: String) {
+                Log.e(TAG, "onError: $errorMessage")
+            }
+
+            override fun onVolumeChanged(volume: Float) {
+            }
+        })
+    }
+
+    private fun createTts() {
         tts = ivAssistant.createTts(
             TtsType.Ali,
             mapOf(
-                Pair("font_name", "siqi"),
+                Pair("font_name", "aitong"),
                 Pair("enable_subtitle", "1"),
                 Pair("sample_rate", 16000),
                 Pair("encode_type", "pcm"),
@@ -102,6 +141,7 @@ class MainActivity : ComponentActivity() {
                     .width(200.dp)
                     .wrapContentHeight(),
                 onClick = {
+                    asr.startListening()
                 }
             ) {
                 Text(text = stringResource(id = R.string.asr))

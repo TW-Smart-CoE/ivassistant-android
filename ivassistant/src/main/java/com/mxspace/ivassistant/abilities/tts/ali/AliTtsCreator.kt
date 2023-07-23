@@ -21,7 +21,7 @@ class AliTtsCreator(
     private var isInit = false
     private val ttsInstance = NativeNui(Constants.ModeType.MODE_TTS)
 
-    fun initTTSInstance() {
+    private fun initTTSInstance() {
         if (isInit) {
             Log.d(TAG, "TTS instance has been initialized")
             return

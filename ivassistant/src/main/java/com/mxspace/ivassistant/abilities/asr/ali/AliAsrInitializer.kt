@@ -1,28 +1,25 @@
-package com.mxspace.ivassistant.abilities.tts.ali
+package com.mxspace.ivassistant.abilities.asr.ali
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import com.alibaba.idst.nui.CommonUtils
 import com.alibaba.nls.client.AccessToken
-import com.mxspace.ivassistant.abilities.tts.ali.AliTtsConstant.META_DATA_ACCESS_KEY
-import com.mxspace.ivassistant.abilities.tts.ali.AliTtsConstant.META_DATA_ACCESS_KEY_SECRET
-import com.mxspace.ivassistant.abilities.tts.ali.AliTtsConstant.META_DATA_APP_KEY
+import com.mxspace.ivassistant.abilities.asr.ali.AliAsrConstant.META_DATA_ACCESS_KEY
+import com.mxspace.ivassistant.abilities.asr.ali.AliAsrConstant.META_DATA_ACCESS_KEY_SECRET
+import com.mxspace.ivassistant.abilities.asr.ali.AliAsrConstant.META_DATA_APP_KEY
+import com.mxspace.ivassistant.abilities.asr.ali.AliAsrConstant.TAG
 import com.mxspace.ivassistant.abilities.tts.ali.AliTtsConstant.MILL_SECONDS
-import com.mxspace.ivassistant.abilities.tts.ali.AliTtsConstant.TAG
 import com.mxspace.ivassistant.utils.SpUtils
 import com.mxspace.ivassistant.utils.Utils.getDeviceId
 import com.mxspace.ivassistant.utils.Utils.getManifestMetaData
 import java.io.IOException
 
 @SuppressLint("StaticFieldLeak")
-class AliTtsInitializer {
+class AliAsrInitializer {
     lateinit var context: Context
     var isInit = false
-
-    var ttsConfig = AliTtsConfig()
-    var ttsParams = AliTtsParams()
-
+    var asrConfig = AliAsrConfig()
     var params = mapOf<String, Any>()
 
     fun init(context: Context, params: Map<String, Any>) {
@@ -31,13 +28,13 @@ class AliTtsInitializer {
         this.params = params
 
         CommonUtils.copyAssetsData(context)
-
         this.context = context.applicationContext
-        ttsConfig = createConfig(context)
+
+        asrConfig = createConfig(context)
         isInit = true
     }
 
-    private fun createConfig(context: Context): AliTtsConfig {
+    private fun createConfig(context: Context): AliAsrConfig {
         val accessKey =
             params["access_key"]?.toString() ?: context.getManifestMetaData(META_DATA_ACCESS_KEY)
             ?: ""
@@ -51,7 +48,21 @@ class AliTtsInitializer {
         val deviceId = context.getDeviceId()
         val workspace = CommonUtils.getModelPath(context)
         val token = params["token"]?.toString() ?: getToken(accessKey, accessKeySecret)
-        return AliTtsConfig(accessKey, accessKeySecret, appKey, deviceId, workspace, token)
+
+        var debugPath = ""
+        context.externalCacheDir?.absolutePath?.also {
+            debugPath = "$it/debug_${System.currentTimeMillis()}"
+        }
+
+        return AliAsrConfig(
+            accessKey = accessKey,
+            accessKeySecret = accessKeySecret,
+            appKey = appKey,
+            deviceId = deviceId,
+            workspace = workspace,
+            debugPath = debugPath,
+            token = token,
+        )
     }
 
     private fun getToken(accessKey: String, accessKeySecret: String): String {
