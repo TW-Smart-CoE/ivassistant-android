@@ -174,6 +174,7 @@ class MainActivity : ComponentActivity() {
                                 override fun onPlayEnd() {
                                     asr.startListening(object : AsrCallback {
                                         override fun onResult(text: String) {
+                                            Log.d(TAG, "onResult: $text")
                                             tts.play(text)
                                         }
 

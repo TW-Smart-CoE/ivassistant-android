@@ -73,11 +73,12 @@ class AliAsrCreator(
                 }
 
                 Constants.NuiEvent.EVENT_VAD_TIMEOUT -> {
-                    Log.d(TAG, "onStopListening")
+                    Log.d(TAG, "onTimeout")
                 }
 
                 Constants.NuiEvent.EVENT_DIALOG_EX -> {
-                    Log.d(TAG, "onStopListening")
+                    Log.d(TAG, "onDialogEx")
+                    asrCallback?.onResult("")
                 }
 
                 else -> {
