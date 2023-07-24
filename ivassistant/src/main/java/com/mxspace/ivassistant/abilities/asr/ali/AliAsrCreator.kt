@@ -214,7 +214,8 @@ class AliAsrCreator(
         return params
     }
 
-    fun create() {
+    fun create(asrCallback: AsrCallback?) {
+        this.asrCallback = asrCallback
         if (!isInit) {
             initAsrInstance()
         }
@@ -236,6 +237,7 @@ class AliAsrCreator(
     }
 
     fun stop() {
+        asrCallback = null
         nuiInstance.stopDialog()
     }
 

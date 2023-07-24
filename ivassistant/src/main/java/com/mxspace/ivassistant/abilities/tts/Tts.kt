@@ -1,12 +1,12 @@
 package com.mxspace.ivassistant.abilities.tts
 
 interface TtsCallback {
-    fun onPlayEnd()
+    fun onPlayEnd() {}
 }
 
 interface Tts {
-    fun initialize(ttsCallback: TtsCallback? = null)
+    fun initialize()
     fun release()
-    fun play(text: String)
+    fun play(text: String, ttsCallback: TtsCallback? = null)
     fun stopPlay()
 }

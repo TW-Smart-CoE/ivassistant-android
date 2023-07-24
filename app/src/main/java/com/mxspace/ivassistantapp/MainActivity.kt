@@ -86,21 +86,7 @@ class MainActivity : ComponentActivity() {
                 Pair("kws-file", "assets:///WakeUp.bin"),
             )
         )
-        wakeUp.initialize(object : WakeUpCallback {
-            override fun onSuccess() {
-                Log.d(TAG, "wakeUp onSuccess")
-                tts.play("我在")
-                asr.startListening()
-            }
-
-            override fun onError(errorCode: Int, errorMessage: String) {
-                Log.e(TAG, "errorCode: $errorCode, errorMessage: $errorMessage")
-            }
-
-            override fun onStop() {
-                Log.d(TAG, "wakeUp onStop")
-            }
-        })
+        wakeUp.initialize()
     }
 
     private fun createAsr() {
@@ -112,19 +98,7 @@ class MainActivity : ComponentActivity() {
                 Pair("max_end_silence", 800),
             )
         )
-        asr.initialize(object : AsrCallback {
-            override fun onResult(text: String) {
-                Log.d(TAG, "onResult: $text")
-                tts.play(text)
-            }
-
-            override fun onError(errorMessage: String) {
-                Log.e(TAG, "onError: $errorMessage")
-            }
-
-            override fun onVolumeChanged(volume: Float) {
-            }
-        })
+        asr.initialize()
     }
 
     private fun createTts() {
@@ -137,11 +111,7 @@ class MainActivity : ComponentActivity() {
                 Pair("encode_type", "pcm"),
             ),
         )
-        tts.initialize(object : TtsCallback {
-            override fun onPlayEnd() {
-                Log.d(TAG, "onPlayEnd")
-            }
-        })
+        tts.initialize()
     }
 
     @Composable
@@ -160,7 +130,11 @@ class MainActivity : ComponentActivity() {
                     .width(200.dp)
                     .wrapContentHeight(),
                 onClick = {
-                    tts.play("你好，我是智能助理")
+                    tts.play("你好，我是智能助理", object : TtsCallback {
+                        override fun onPlayEnd() {
+                            Log.d(TAG, "onPlayEnd")
+                        }
+                    })
                 }
             ) {
                 Text(text = stringResource(id = R.string.tts))
@@ -172,7 +146,16 @@ class MainActivity : ComponentActivity() {
                     .width(200.dp)
                     .wrapContentHeight(),
                 onClick = {
-                    asr.startListening()
+                    asr.startListening(object : AsrCallback {
+                        override fun onResult(text: String) {
+                            Log.d(TAG, "onResult: $text")
+                            tts.play(text)
+                        }
+
+                        override fun onError(errorMessage: String) {
+                            Log.e(TAG, "onError: $errorMessage")
+                        }
+                    })
                 }
             ) {
                 Text(text = stringResource(id = R.string.asr))
@@ -184,7 +167,32 @@ class MainActivity : ComponentActivity() {
                     .width(200.dp)
                     .wrapContentHeight(),
                 onClick = {
-                    wakeUp.start()
+                    wakeUp.start(object : WakeUpCallback {
+                        override fun onSuccess() {
+                            Log.d(TAG, "wakeUp onSuccess")
+                            tts.play("我在", object : TtsCallback {
+                                override fun onPlayEnd() {
+                                    asr.startListening(object : AsrCallback {
+                                        override fun onResult(text: String) {
+                                            tts.play(text)
+                                        }
+
+                                        override fun onError(errorMessage: String) {
+                                            Log.e(TAG, "onError: $errorMessage")
+                                        }
+                                    })
+                                }
+                            })
+                        }
+
+                        override fun onError(errorCode: Int, errorMessage: String) {
+                            Log.e(TAG, "errorCode: $errorCode, errorMessage: $errorMessage")
+                        }
+
+                        override fun onStop() {
+                            Log.d(TAG, "wakeUp onStop")
+                        }
+                    })
                 }
             ) {
                 Text(text = stringResource(id = R.string.wake_up))

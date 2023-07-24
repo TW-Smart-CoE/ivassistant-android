@@ -36,9 +36,7 @@ class AliTts(
             }
         })
 
-    override fun initialize(ttsCallback: TtsCallback?) {
-        this.ttsCallback = ttsCallback
-
+    override fun initialize() {
         threadPool.execute {
             ttsInitializer.init(context, params)
         }
@@ -49,7 +47,7 @@ class AliTts(
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    override fun play(text: String) {
+    override fun play(text: String, ttsCallback: TtsCallback?) {
         if (!ttsInitializer.isInit) {
             Log.e(TAG, "TTS is not initialized!")
             return
@@ -57,6 +55,7 @@ class AliTts(
 
         stopPlay()
         ttsPlayer = AliTtsPlayer(ttsInitializer)
+        this.ttsCallback = ttsCallback
         threadPool.execute {
             aliTtsCreator.create(text)
         }
@@ -66,5 +65,6 @@ class AliTts(
     override fun stopPlay() {
         ttsPlayer?.release()
         ttsPlayer = null
+        ttsCallback = null
     }
 }

@@ -44,9 +44,7 @@ class BaiduWakeUp(
             }
         }
 
-    override fun initialize(wakeUpCallback: WakeUpCallback?) {
-        this.wakeUpCallback = wakeUpCallback
-
+    override fun initialize() {
         if (isInited) {
             return
         }
@@ -55,7 +53,9 @@ class BaiduWakeUp(
         isInited = true
     }
 
-    override fun start() {
+    override fun start(wakeUpCallback: WakeUpCallback?) {
+        this.wakeUpCallback = wakeUpCallback
+
         val wpParams: MutableMap<String, Any> = mutableMapOf()
         wpParams[SpeechConstant.APP_ID] =
             params["app_id"]?.toString()
@@ -76,6 +76,7 @@ class BaiduWakeUp(
 
     override fun stop() {
         wp.send(SpeechConstant.WAKEUP_STOP, null, null, 0, 0)
+        this.wakeUpCallback = null
     }
 
     override fun release() {

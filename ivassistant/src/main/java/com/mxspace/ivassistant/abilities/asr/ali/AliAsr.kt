@@ -13,16 +13,14 @@ class AliAsr(
     private val aliTtsInitializer = AliAsrInitializer()
     private val aliAsrCreator = AliAsrCreator(context, params, aliTtsInitializer)
 
-    override fun initialize(asrCallback: AsrCallback?) {
-        aliAsrCreator.asrCallback = asrCallback
-
+    override fun initialize() {
         threadPool.execute {
             aliTtsInitializer.init(context, params)
         }
     }
 
-    override fun startListening() {
-        aliAsrCreator.create()
+    override fun startListening(asrCallback: AsrCallback?) {
+        aliAsrCreator.create(asrCallback)
     }
 
     override fun stopListening() {
