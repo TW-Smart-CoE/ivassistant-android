@@ -47,7 +47,7 @@ android {
 }
 
 dependencies {
-    api(fileTree(dir: 'libs', include: ['**/*.jar', '**/*.aar']))
+    api(fileTree(dir: 'libs', include: ['**/*.jar']))
 //    api(files("libs/ali/nuisdk-release.aar"))
 
     // network
@@ -56,6 +56,7 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
 
     // ali libs
+    implementation("com.github.jie-meng:nuisdk:0.1.5")
     implementation("com.aliyun:aliyun-java-sdk-core:3.7.1")
     implementation("com.alibaba.nls:nls-sdk-common:2.1.6") {
         exclude group: 'com.alibaba', module: 'fastjson'
@@ -70,7 +71,6 @@ dependencies {
     implementation("com.sun.xml.bind:jaxb-core:2.3.0")
     implementation("com.sun.xml.bind:jaxb-impl:2.3.0") // jaxb-impl must be 2.3.0, otherwise will cause error
     implementation("xerces:xercesImpl:2.12.0")
-
     implementation("com.alibaba:fastjson:1.1.46.android")
 
     // picovoice
