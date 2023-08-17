@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi
 import com.mxspace.ivassistant.abilities.tts.Tts
 import com.mxspace.ivassistant.abilities.tts.TtsCallback
 import com.mxspace.ivassistant.abilities.tts.ali.AliTtsConstant.TAG
+import java.util.*
 import java.util.concurrent.ExecutorService
 
 class AliTts(
@@ -15,22 +16,52 @@ class AliTts(
     private val threadPool: ExecutorService,
 ) : Tts {
     private val ttsInitializer = AliTtsInitializer()
+    private val ttsFileWriter = AliTtsFileWriter()
     private var ttsPlayer: AliTtsPlayer? = null
     private var ttsCallback: TtsCallback? = null
+    private val encodeType = params["encode_type"]?.toString() ?: "pcm"
+    private var wavHeaderToBeRemove: Boolean = false
 
-    private val aliTtsCreator = AliTtsCreator(params,
+    init {
+        ttsFileWriter.ttsFilePath = params["tts_file_path"]?.toString() ?: ""
+    }
+
+    private val aliTtsCreator = AliTtsCreator(
+        params,
         ttsInitializer,
         object : AliTtsCreator.Callback {
             override fun onTtsStart() {
+                wavHeaderToBeRemove = Build.VERSION.SDK_INT > Build.VERSION_CODES.Q
+                if (ttsFileWriter.ttsFilePath.isNotEmpty()) {
+                    ttsFileWriter.createFile()
+                }
             }
 
             @RequiresApi(Build.VERSION_CODES.M)
-            override fun onTtsDataArrived(data: AliTtsData) {
-                ttsPlayer?.writeData(data.data)
+            override fun onTtsDataArrived(ttsData: AliTtsData) {
+                val newAudioData: ByteArray =
+                    if (wavHeaderToBeRemove) ttsData.data.copyOfRange(
+                        44,
+                        ttsData.data.size
+                    ) else ttsData.data
+                wavHeaderToBeRemove = false
+
+                ttsPlayer?.writeData(newAudioData)
+
+                if (ttsFileWriter.ttsFilePath.isNotEmpty()) {
+                    ttsFileWriter.writeData(ttsData.data)
+                }
             }
 
             @RequiresApi(Build.VERSION_CODES.M)
             override fun onTtsEnd() {
+                ttsFileWriter.closeFile()
+                if (ttsFileWriter.ttsFilePath.isNotEmpty()) {
+                    ttsCallback?.onTTSFileSaved(ttsFileWriter.ttsFilePath)
+                }
+
+                wavHeaderToBeRemove = false
+
                 ttsCallback?.onPlayEnd()
                 stopPlay()
             }
@@ -54,7 +85,7 @@ class AliTts(
         }
 
         stopPlay()
-        ttsPlayer = AliTtsPlayer(ttsInitializer)
+        ttsPlayer = AliTtsPlayer(ttsInitializer, encodeType)
         this.ttsCallback = ttsCallback
         threadPool.execute {
             aliTtsCreator.create(text)

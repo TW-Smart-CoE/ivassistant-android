@@ -108,7 +108,8 @@ class MainActivity : ComponentActivity() {
                 Pair("font_name", "aitong"),
                 Pair("enable_subtitle", "1"),
                 Pair("sample_rate", 16000),
-                Pair("encode_type", "pcm"),
+                Pair("encode_type", "wav"),
+                Pair("tts_file_path", "${externalCacheDir?.absolutePath}/tts.wav"),
             ),
         )
         tts.initialize()
@@ -133,6 +134,10 @@ class MainActivity : ComponentActivity() {
                     tts.play("你好，我是智能助理", object : TtsCallback {
                         override fun onPlayEnd() {
                             Log.d(TAG, "onPlayEnd")
+                        }
+
+                        override fun onTTSFileSaved(ttsFilePath: String) {
+                            Log.d(TAG, "onTTSFileSaved: $ttsFilePath")
                         }
                     })
                 }
@@ -182,6 +187,10 @@ class MainActivity : ComponentActivity() {
                                             Log.e(TAG, "onError: $errorMessage")
                                         }
                                     })
+                                }
+
+                                override fun onTTSFileSaved(ttsFilePath: String) {
+                                    Log.d(TAG, "onTTSFileSaved: $ttsFilePath")
                                 }
                             })
                         }

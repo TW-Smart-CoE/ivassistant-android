@@ -23,7 +23,7 @@ class AliTtsInitializer {
     var ttsConfig = AliTtsConfig()
     var ttsParams = AliTtsParams()
 
-    var params = mapOf<String, Any>()
+    private var params = mapOf<String, Any>()
 
     fun init(context: Context, params: Map<String, Any>) {
         if (isInit) return

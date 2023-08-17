@@ -10,12 +10,26 @@ import androidx.annotation.RequiresApi
 @RequiresApi(Build.VERSION_CODES.M)
 class AliTtsPlayer(
     ttsInitializer: AliTtsInitializer,
-    encode: Int = AudioFormat.ENCODING_PCM_16BIT
+    encodeType: String,
 ) {
-    var audioTrack: AudioTrack? = null
+    private fun getEncodeType(encodeType: String): Int {
+        return when (encodeType) {
+            "mp3" -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                AudioFormat.ENCODING_MP3
+            } else {
+                AudioFormat.ENCODING_PCM_16BIT
+            }
 
+            "pcm" -> AudioFormat.ENCODING_PCM_16BIT
+            "wav" -> AudioFormat.ENCODING_PCM_16BIT
+            else -> AudioFormat.ENCODING_PCM_16BIT
+        }
+    }
+
+    private val encode = getEncodeType(encodeType)
+    private var audioTrack: AudioTrack? = null
     private val sampleRate = ttsInitializer.ttsParams.sampleRate
-    private val minBufferSize = AudioTrack.getMinBufferSize(
+    private val minBufferSize: Int = AudioTrack.getMinBufferSize(
         sampleRate,
         AudioFormat.CHANNEL_OUT_MONO,
         encode
@@ -37,7 +51,7 @@ class AliTtsPlayer(
             .setAudioFormat(
                 AudioFormat.Builder()
                     .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
-                    .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
+                    .setEncoding(encode)
                     .setSampleRate(sampleRate)
                     .build()
             )
