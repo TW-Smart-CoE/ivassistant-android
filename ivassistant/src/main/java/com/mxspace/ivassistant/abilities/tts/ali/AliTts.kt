@@ -17,7 +17,7 @@ class AliTts(
 ) : Tts {
     private val ttsInitializer = AliTtsInitializer()
     private val ttsFileWriter = AliTtsFileWriter()
-    private var ttsPlayer: AliTtsPlayer? = null
+    private var ttsPlayer: AliTtsPcmPlayer? = null
     private var ttsCallback: TtsCallback? = null
     private val encodeType = params["encode_type"]?.toString() ?: "pcm"
     private val removeWavHeader = params["remove_wav_header"]?.toString()?.toBoolean() ?: true
@@ -48,7 +48,7 @@ class AliTts(
                     ) else ttsData.data
                 wavHeaderToBeRemove = false
 
-                if (playSound) {
+                if (playSound && encodeType != "mp3") {
                     ttsPlayer?.writeData(newAudioData)
                 }
 
@@ -88,9 +88,9 @@ class AliTts(
             return
         }
 
-        if (playSound) {
+        if (playSound && encodeType != "mp3") {
             stopPlay()
-            ttsPlayer = AliTtsPlayer(ttsInitializer, encodeType)
+            ttsPlayer = AliTtsPcmPlayer(ttsInitializer, encodeType)
         }
 
         this.ttsCallback = ttsCallback

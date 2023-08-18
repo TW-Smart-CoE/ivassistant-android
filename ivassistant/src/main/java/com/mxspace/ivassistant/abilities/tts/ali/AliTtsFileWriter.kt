@@ -14,7 +14,6 @@ class AliTtsFileWriter(
 
     fun createFile() {
         outputStream?.close()
-        outputStream = FileOutputStream(ttsFilePath)
 
         val file = File(ttsFilePath)
 

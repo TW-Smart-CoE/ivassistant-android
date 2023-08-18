@@ -8,22 +8,12 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 
 @RequiresApi(Build.VERSION_CODES.M)
-class AliTtsPlayer(
+class AliTtsPcmPlayer(
     ttsInitializer: AliTtsInitializer,
     encodeType: String,
 ) {
     private fun getEncodeType(encodeType: String): Int {
-        return when (encodeType) {
-            "mp3" -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                AudioFormat.ENCODING_MP3
-            } else {
-                AudioFormat.ENCODING_PCM_16BIT
-            }
-
-            "pcm" -> AudioFormat.ENCODING_PCM_16BIT
-            "wav" -> AudioFormat.ENCODING_PCM_16BIT
-            else -> AudioFormat.ENCODING_PCM_16BIT
-        }
+        return AudioFormat.ENCODING_PCM_16BIT
     }
 
     private val encode = getEncodeType(encodeType)
