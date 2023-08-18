@@ -20,6 +20,8 @@ class AliTts(
     private var ttsPlayer: AliTtsPlayer? = null
     private var ttsCallback: TtsCallback? = null
     private val encodeType = params["encode_type"]?.toString() ?: "pcm"
+    private val removeWavHeader = params["remove_wav_header"]?.toString()?.toBoolean() ?: true
+    private val playSound = params["play_sound"]?.toString()?.toBoolean() ?: true
     private var wavHeaderToBeRemove: Boolean = false
 
     init {
@@ -40,13 +42,15 @@ class AliTts(
             @RequiresApi(Build.VERSION_CODES.M)
             override fun onTtsDataArrived(ttsData: AliTtsData) {
                 val newAudioData: ByteArray =
-                    if (wavHeaderToBeRemove) ttsData.data.copyOfRange(
+                    if (encodeType == "wav" && removeWavHeader && wavHeaderToBeRemove) ttsData.data.copyOfRange(
                         44,
                         ttsData.data.size
                     ) else ttsData.data
                 wavHeaderToBeRemove = false
 
-                ttsPlayer?.writeData(newAudioData)
+                if (playSound) {
+                    ttsPlayer?.writeData(newAudioData)
+                }
 
                 if (ttsFileWriter.ttsFilePath.isNotEmpty()) {
                     ttsFileWriter.writeData(ttsData.data)
@@ -84,8 +88,11 @@ class AliTts(
             return
         }
 
-        stopPlay()
-        ttsPlayer = AliTtsPlayer(ttsInitializer, encodeType)
+        if (playSound) {
+            stopPlay()
+            ttsPlayer = AliTtsPlayer(ttsInitializer, encodeType)
+        }
+
         this.ttsCallback = ttsCallback
         threadPool.execute {
             aliTtsCreator.create(text)
