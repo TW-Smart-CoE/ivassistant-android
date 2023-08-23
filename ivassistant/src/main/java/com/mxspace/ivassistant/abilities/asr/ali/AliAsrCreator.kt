@@ -177,7 +177,7 @@ class AliAsrCreator(
         var genParams = ""
         try {
             val nlsConfig = JSONObject()
-            nlsConfig.put("enable_intermediate_result", true)
+            nlsConfig.put("enable_intermediate_result", false)
             //参数可根据实际业务进行配置
             //接口说明可见: https://help.aliyun.com/document_detail/173298.html
             //nls_config.put("enable_punctuation_prediction", true);
