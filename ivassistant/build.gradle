@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.mxspace.ivassistant'
+    namespace 'com.thoughtworks.ivassistant'
     compileSdk 33
 
     defaultConfig {

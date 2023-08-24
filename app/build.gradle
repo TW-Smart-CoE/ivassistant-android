@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.mxspace.ivassistantapp'
+    namespace 'com.thoughtworks.ivassistantapp'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.mxspace.ivassistantapp"
+        applicationId "com.thoughtworks.ivassistantapp"
         minSdk 22
         targetSdk 33
         versionCode 1
