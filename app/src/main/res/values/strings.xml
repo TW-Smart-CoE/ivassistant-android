@@ -3,4 +3,5 @@
     <string name="tts">TTS</string>
     <string name="asr">ASR</string>
     <string name="wake_up">WakeUp</string>
+    <string name="goodbye">Goodbye</string>
 </resources>

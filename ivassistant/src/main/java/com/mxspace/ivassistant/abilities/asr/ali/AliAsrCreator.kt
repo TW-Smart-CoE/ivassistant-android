@@ -177,17 +177,19 @@ class AliAsrCreator(
         var genParams = ""
         try {
             val nlsConfig = JSONObject()
-            nlsConfig.put("enable_intermediate_result", false)
+            nlsConfig.put("enable_intermediate_result", true)
             //参数可根据实际业务进行配置
             //接口说明可见: https://help.aliyun.com/document_detail/173298.html
             //nls_config.put("enable_punctuation_prediction", true);
             //nls_config.put("enable_inverse_text_normalization", true);
             //nls_config.put("customization_id", "test_id");
             //nls_config.put("vocabulary_id", "test_id");
-            nlsConfig.put("enable_voice_detection", params["enable_voice_detection"] ?: true)
-            nlsConfig.put("max_start_silence", params["max_start_silence"] ?: 10000)
-            nlsConfig.put("max_end_silence", params["max_end_silence"] ?: 800)
-            nlsConfig.put("speech_noise_threshold", params["speech_noise_threshold"] ?: 0)
+            nlsConfig.put("enable_voice_detection", true)
+            nlsConfig.put("max_start_silence", 10000)
+            nlsConfig.put("max_end_silence", 800)
+
+            // https://help.aliyun.com/document_detail/316816.html
+            nlsConfig.put("speech_noise_threshold", params["speech_noise_threshold"] ?: 0.8)
             //nls_config.put("sample_rate", 16000);
             //nls_config.put("sr_format", "opus");
             val parameters = JSONObject()

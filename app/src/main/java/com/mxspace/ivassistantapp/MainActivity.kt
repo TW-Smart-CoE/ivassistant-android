@@ -1,6 +1,7 @@
 package com.mxspace.ivassistantapp
 
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -151,6 +152,7 @@ class MainActivity : ComponentActivity() {
                     .width(200.dp)
                     .wrapContentHeight(),
                 onClick = {
+//                    listenAndSay()
                     asr.startListening(object : AsrCallback {
                         override fun onResult(text: String) {
                             Log.d(TAG, "onResult: $text")
@@ -208,5 +210,32 @@ class MainActivity : ComponentActivity() {
                 Text(text = stringResource(id = R.string.wake_up))
             }
         }
+    }
+
+    fun listenAndSay() {
+        SystemClock.sleep(800L)
+        Log.d(TAG, "startListening")
+        asr.startListening(object : AsrCallback {
+            override fun onResult(text: String) {
+                Log.d(TAG, "onResult: $text")
+                if (text.isNotEmpty()) {
+                    tts.play(text, object : TtsCallback {
+                        override fun onPlayEnd() {
+                            Log.d(TAG, "onPlayEnd")
+                            listenAndSay()
+                        }
+
+                        override fun onTTSFileSaved(ttsFilePath: String) {
+                        }
+                    })
+                } else {
+                    tts.play(getString(R.string.goodbye))
+                }
+            }
+
+            override fun onError(errorMessage: String) {
+                Log.e(TAG, "onError: $errorMessage")
+            }
+        })
     }
 }

@@ -56,7 +56,7 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
 
     // ali libs
-    implementation("com.github.jie-meng:nuisdk:0.1.5")
+    implementation("com.github.TW-Smart-CoE:nuisdk:0.1.7")
     implementation("com.aliyun:aliyun-java-sdk-core:3.7.1")
     implementation("com.alibaba.nls:nls-sdk-common:2.1.6") {
         exclude group: 'com.alibaba', module: 'fastjson'
