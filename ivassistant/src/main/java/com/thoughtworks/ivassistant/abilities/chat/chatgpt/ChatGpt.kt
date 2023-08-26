@@ -21,13 +21,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.POST
 import java.io.IOException
-import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit
 
 class ChatGpt(
     private val context: Context,
     private val params: Map<String, Any>,
-    private val threadPool: ExecutorService,
 ) : Chat {
     interface ChatGptService {
         @POST("v1/chat/completions")

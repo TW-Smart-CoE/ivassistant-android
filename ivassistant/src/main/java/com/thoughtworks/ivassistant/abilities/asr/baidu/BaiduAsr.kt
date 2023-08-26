@@ -6,12 +6,10 @@ import com.thoughtworks.ivassistant.abilities.asr.Asr
 import com.thoughtworks.ivassistant.abilities.asr.AsrCallback
 import com.thoughtworks.ivassistant.abilities.wakeup.baidu.BaiduWakeUpConstant
 import com.thoughtworks.ivassistant.utils.Utils.getManifestMetaData
-import java.util.concurrent.ExecutorService
 
 class BaiduAsr(
     val context: Context,
     val params: Map<String, Any> = mapOf(),
-    private val threadPool: ExecutorService
 ) : Asr {
     private val baiduAsrManager = BaiduAsrManager()
     private val bdAsrParams: MutableMap<String, Any> = mutableMapOf()

@@ -14,6 +14,7 @@ import com.thoughtworks.ivassistant.abilities.tts.ali.AliTts
 import com.thoughtworks.ivassistant.abilities.wakeup.WakeUp
 import com.thoughtworks.ivassistant.abilities.wakeup.WakeUpType
 import com.thoughtworks.ivassistant.abilities.wakeup.baidu.BaiduWakeUp
+import com.thoughtworks.ivassistant.abilities.wakeup.picovoice.PicovoiceWakeUp
 import java.util.concurrent.Executors
 
 class IVAssistant(private val context: Context) {
@@ -29,21 +30,22 @@ class IVAssistant(private val context: Context) {
     fun createAsr(asrType: AsrType, params: Map<String, Any> = emptyMap()): Asr {
         return when (asrType) {
             AsrType.Ali -> AliAsr(context, params, threadPool)
-            AsrType.Baidu -> BaiduAsr(context, params, threadPool)
+            AsrType.Baidu -> BaiduAsr(context, params)
             else -> throw IllegalArgumentException("Not supported type: ${asrType.name}!")
         }
     }
 
     fun createWakeUp(wakeUpType: WakeUpType, params: Map<String, Any> = emptyMap()): WakeUp {
         return when (wakeUpType) {
-            WakeUpType.Baidu -> BaiduWakeUp(context, params, threadPool)
+            WakeUpType.Baidu -> BaiduWakeUp(context, params)
+            WakeUpType.Picovoice -> PicovoiceWakeUp(context, params)
             else -> throw IllegalArgumentException("Not supported type: ${wakeUpType.name}!")
         }
     }
 
     fun createChat(chatType: ChatType, params: Map<String, Any> = emptyMap()): Chat {
         return when (chatType) {
-            ChatType.ChatGpt -> ChatGpt(context, params, threadPool)
+            ChatType.ChatGpt -> ChatGpt(context, params)
             else -> throw IllegalArgumentException("Not supported type: ${chatType.name}!")
         }
     }

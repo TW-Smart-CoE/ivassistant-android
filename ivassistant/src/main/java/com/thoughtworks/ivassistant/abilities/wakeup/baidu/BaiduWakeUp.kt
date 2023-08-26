@@ -11,12 +11,10 @@ import com.thoughtworks.ivassistant.abilities.wakeup.WakeUpCallback
 import com.thoughtworks.ivassistant.abilities.wakeup.baidu.BaiduWakeUpConstant.TAG
 import com.thoughtworks.ivassistant.utils.Utils.getManifestMetaData
 import org.json.JSONObject
-import java.util.concurrent.ExecutorService
 
 class BaiduWakeUp(
     private val context: Context,
     private val params: Map<String, Any> = emptyMap(),
-    private val threadPool: ExecutorService,
 ) : WakeUp {
     private var isInited = false
 

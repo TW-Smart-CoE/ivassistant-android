@@ -104,6 +104,17 @@ class MainActivity : ComponentActivity() {
                 Pair("kws-file", "assets:///WakeUp.bin"),
             )
         )
+//        wakeUp = ivAssistant.createWakeUp(
+//            WakeUpType.Picovoice,
+//            mapOf(
+//                Pair(
+//                    "keyword_paths", listOf(
+//                        "wakeup/picovoice/Hi-Joey_en_android_v2_2_0.ppn", // 注意这里的文件路径不要加 assets:/// 前缀
+//                        "wakeup/picovoice/Hello-Joey_en_android_v2_2_0.ppn"
+//                    )
+//                ),
+//            )
+//        )
         wakeUp.initialize()
     }
 
