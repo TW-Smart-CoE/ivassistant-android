@@ -27,6 +27,9 @@ import com.thoughtworks.ivassistant.IVAssistant
 import com.thoughtworks.ivassistant.abilities.asr.Asr
 import com.thoughtworks.ivassistant.abilities.asr.AsrCallback
 import com.thoughtworks.ivassistant.abilities.asr.AsrType
+import com.thoughtworks.ivassistant.abilities.chat.Chat
+import com.thoughtworks.ivassistant.abilities.chat.ChatCallback
+import com.thoughtworks.ivassistant.abilities.chat.ChatType
 import com.thoughtworks.ivassistant.abilities.tts.Tts
 import com.thoughtworks.ivassistant.abilities.tts.TtsCallback
 import com.thoughtworks.ivassistant.abilities.tts.TtsType
@@ -45,6 +48,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var tts: Tts
     private lateinit var asr: Asr
     private lateinit var wakeUp: WakeUp
+    private lateinit var chat: Chat
 
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,6 +82,19 @@ class MainActivity : ComponentActivity() {
         createTts()
         createAsr()
         createWakeUp()
+        createChat()
+    }
+
+    private fun createChat() {
+        chat = ivAssistant.createChat(
+            ChatType.ChatGpt,
+            mapOf(
+                Pair("base_url", "https://api.openai.com"),
+                Pair("model", "gpt-3.5-turbo"),
+                Pair("temperature", 1.0f),
+                Pair("max_history_len", 20),
+            )
+        )
     }
 
     private fun createWakeUp() {
@@ -156,8 +173,16 @@ class MainActivity : ComponentActivity() {
 //                    listenAndSay()
                     asr.startListening(object : AsrCallback {
                         override fun onResult(text: String) {
-                            Log.d(TAG, "onResult: $text")
-                            tts.play(text)
+                            Log.d(TAG, "asr onResult: $text")
+                            chat.chat(text, object : ChatCallback {
+                                override fun onResult(text: String) {
+                                    tts.play(text)
+                                }
+
+                                override fun onError(errorMessage: String) {
+                                    Log.e(TAG, "chat onError: $errorMessage")
+                                }
+                            })
                         }
 
                         override fun onError(errorMessage: String) {

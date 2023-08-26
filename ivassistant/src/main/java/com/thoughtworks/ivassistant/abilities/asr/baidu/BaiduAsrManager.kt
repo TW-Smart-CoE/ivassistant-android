@@ -78,5 +78,6 @@ class BaiduAsrManager {
     }
 
     fun release() {
+        Log.d(TAG, "release")
     }
 }

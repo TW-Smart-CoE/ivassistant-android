@@ -48,7 +48,6 @@ android {
 
 dependencies {
     api(fileTree(dir: 'libs', include: ['**/*.jar']))
-//    api(files("libs/ali/nuisdk-release.aar"))
 
     // network
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

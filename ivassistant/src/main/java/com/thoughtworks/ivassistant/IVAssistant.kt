@@ -5,6 +5,9 @@ import com.thoughtworks.ivassistant.abilities.asr.Asr
 import com.thoughtworks.ivassistant.abilities.asr.AsrType
 import com.thoughtworks.ivassistant.abilities.asr.ali.AliAsr
 import com.thoughtworks.ivassistant.abilities.asr.baidu.BaiduAsr
+import com.thoughtworks.ivassistant.abilities.chat.Chat
+import com.thoughtworks.ivassistant.abilities.chat.ChatType
+import com.thoughtworks.ivassistant.abilities.chat.chatgpt.ChatGpt
 import com.thoughtworks.ivassistant.abilities.tts.Tts
 import com.thoughtworks.ivassistant.abilities.tts.TtsType
 import com.thoughtworks.ivassistant.abilities.tts.ali.AliTts
@@ -35,6 +38,13 @@ class IVAssistant(private val context: Context) {
         return when (wakeUpType) {
             WakeUpType.Baidu -> BaiduWakeUp(context, params, threadPool)
             else -> throw IllegalArgumentException("Not supported type: ${wakeUpType.name}!")
+        }
+    }
+
+    fun createChat(chatType: ChatType, params: Map<String, Any> = emptyMap()): Chat {
+        return when (chatType) {
+            ChatType.ChatGpt -> ChatGpt(context, params, threadPool)
+            else -> throw IllegalArgumentException("Not supported type: ${chatType.name}!")
         }
     }
 
