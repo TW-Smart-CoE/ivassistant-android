@@ -11,6 +11,7 @@ import com.thoughtworks.ivassistant.abilities.chat.chatgpt.ChatGpt
 import com.thoughtworks.ivassistant.abilities.tts.Tts
 import com.thoughtworks.ivassistant.abilities.tts.TtsType
 import com.thoughtworks.ivassistant.abilities.tts.ali.AliTts
+import com.thoughtworks.ivassistant.abilities.tts.google.GoogleTts
 import com.thoughtworks.ivassistant.abilities.wakeup.WakeUp
 import com.thoughtworks.ivassistant.abilities.wakeup.WakeUpType
 import com.thoughtworks.ivassistant.abilities.wakeup.baidu.BaiduWakeUp
@@ -23,6 +24,7 @@ class IVAssistant(private val context: Context) {
     fun createTts(ttsType: TtsType, params: Map<String, Any> = emptyMap()): Tts {
         return when (ttsType) {
             TtsType.Ali -> AliTts(context, params, threadPool)
+            TtsType.Google -> GoogleTts(context, params)
             else -> throw IllegalArgumentException("Not supported type: ${ttsType.name}!")
         }
     }

@@ -53,6 +53,9 @@ android {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
+        pickFirst("META-INF/io.netty.versions.properties")
+        pickFirst("META-INF/DEPENDENCIES")
+        pickFirst("META-INF/INDEX.LIST")
     }
 }
 

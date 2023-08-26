@@ -38,6 +38,7 @@ import com.thoughtworks.ivassistant.abilities.wakeup.WakeUpCallback
 import com.thoughtworks.ivassistant.abilities.wakeup.WakeUpType
 import com.thoughtworks.ivassistantapp.ui.theme.IvassistantandroidTheme
 import com.thoughtworks.ivassistantapp.utils.MultiplePermissions
+import java.io.ByteArrayInputStream
 
 class MainActivity : ComponentActivity() {
     companion object {
@@ -142,6 +143,25 @@ class MainActivity : ComponentActivity() {
                 Pair("tts_file_path", "${externalCacheDir?.absolutePath}/tts.wav"),
             ),
         )
+//        tts = ivAssistant.createTts(
+//            TtsType.Google,
+//            mapOf(
+//                Pair(
+//                    "credentials", ByteArrayInputStream(
+//                        """
+//                           // your google credentials in json format
+//                        """.toByteArray()
+//                    )
+//                ),
+//                Pair("language_code", "en-US"),
+//                Pair("name", "en-US-Wavenet-F"),
+//                Pair("speaking_rate", 1.0), // Speech speed. Default is 1.0. Range is 0.25 to 4.0.
+//                Pair(
+//                    "volume_gain_db",
+//                    0.0
+//                ), //Volume gain (in dB) of the normal native volume, supported by the specific voice, in the range [-96.0, 16.0]
+//            )
+//        )
         tts.initialize()
     }
 
