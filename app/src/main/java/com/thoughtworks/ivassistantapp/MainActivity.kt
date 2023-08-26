@@ -91,14 +91,15 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun createAsr() {
-        asr = ivAssistant.createAsr(
-            AsrType.Ali,
-            mapOf(
-                Pair("enable_voice_detection", true),
-                Pair("max_start_silence", 10000),
-                Pair("max_end_silence", 800),
-            )
-        )
+//        asr = ivAssistant.createAsr(
+//            AsrType.Ali,
+//            mapOf(
+//                Pair("enable_voice_detection", true),
+//                Pair("max_start_silence", 10000),
+//                Pair("max_end_silence", 800),
+//            )
+//        )
+        asr = ivAssistant.createAsr(AsrType.Baidu, mapOf())
         asr.initialize()
     }
 

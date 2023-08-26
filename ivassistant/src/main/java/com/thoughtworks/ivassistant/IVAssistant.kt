@@ -4,6 +4,7 @@ import android.content.Context
 import com.thoughtworks.ivassistant.abilities.asr.Asr
 import com.thoughtworks.ivassistant.abilities.asr.AsrType
 import com.thoughtworks.ivassistant.abilities.asr.ali.AliAsr
+import com.thoughtworks.ivassistant.abilities.asr.baidu.BaiduAsr
 import com.thoughtworks.ivassistant.abilities.tts.Tts
 import com.thoughtworks.ivassistant.abilities.tts.TtsType
 import com.thoughtworks.ivassistant.abilities.tts.ali.AliTts
@@ -25,6 +26,7 @@ class IVAssistant(private val context: Context) {
     fun createAsr(asrType: AsrType, params: Map<String, Any> = emptyMap()): Asr {
         return when (asrType) {
             AsrType.Ali -> AliAsr(context, params, threadPool)
+            AsrType.Baidu -> BaiduAsr(context, params, threadPool)
             else -> throw IllegalArgumentException("Not supported type: ${asrType.name}!")
         }
     }
