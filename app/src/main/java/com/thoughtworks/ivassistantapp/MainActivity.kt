@@ -202,9 +202,14 @@ class MainActivity : ComponentActivity() {
                     .wrapContentHeight(),
                 onClick = {
 //                    listenAndSay()
+                    Log.d(TAG, "startListening")
                     asr.startListening(object : AsrCallback {
                         override fun onResult(text: String) {
                             Log.d(TAG, "asr onResult: $text")
+                            if (text.isEmpty()) {
+                                return
+                            }
+
                             chat.chat(text, object : ChatCallback {
                                 override fun onResult(text: String) {
                                     tts.play(text)
@@ -218,6 +223,10 @@ class MainActivity : ComponentActivity() {
 
                         override fun onError(errorMessage: String) {
                             Log.e(TAG, "onError: $errorMessage")
+                        }
+
+                        override fun onVolumeChanged(volume: Float) {
+                            Log.d(TAG, "onVolumeChanged: $volume")
                         }
                     })
                 }

@@ -163,7 +163,7 @@ class GoogleTts(
     }
 
     companion object {
-        private const val TAG = "SA.GoogleTts"
+        private const val TAG = "IV.GoogleTts"
         private const val DEFAULT_FILE_SAVE_DIR = "google_tts"
     }
 }

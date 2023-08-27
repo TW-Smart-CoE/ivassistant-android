@@ -202,7 +202,7 @@ class ChatGpt(
     internal class InternalServerException(message: String) : IOException(message)
 
     companion object {
-        private const val TAG = "SA.ChatGpt"
+        private const val TAG = "IV.ChatGpt"
         private const val ROLE_SYSTEM = "system"
         private const val ROLE_USER = "user"
         private const val ROLE_ASSISTANT = "assistant"

@@ -31,6 +31,7 @@ class BaiduAsr(
     }
 
     override fun startListening(asrCallback: AsrCallback?) {
+        stopListening()
         baiduAsrManager.create(context, bdAsrParams, asrCallback)
     }
 

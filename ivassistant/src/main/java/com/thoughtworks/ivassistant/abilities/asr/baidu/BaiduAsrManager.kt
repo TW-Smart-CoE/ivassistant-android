@@ -12,6 +12,7 @@ import com.thoughtworks.ivassistant.abilities.asr.baidu.BaiduAsrConstant.NLU_RES
 import com.thoughtworks.ivassistant.abilities.asr.baidu.BaiduAsrConstant.PARTIAL_RESULT
 import com.thoughtworks.ivassistant.abilities.asr.baidu.BaiduAsrConstant.TAG
 import org.json.JSONObject
+import kotlin.math.log
 
 class BaiduAsrManager {
     private var eventManager: EventManager? = null
@@ -47,6 +48,18 @@ class BaiduAsrManager {
                 asrCallback?.onError(params)
             }
 
+            SpeechConstant.CALLBACK_EVENT_ASR_FINISH -> {
+                if (logTxt.isEmpty()) {
+                    asrCallback?.onResult("")
+                }
+            }
+
+            SpeechConstant.CALLBACK_EVENT_ASR_VOLUME -> {
+                Log.d(TAG, "asr volume: $params")
+                val volume = JSONObject(params).optInt("volume")
+                asrCallback?.onVolumeChanged(volume.toFloat())
+            }
+
             else -> {
                 logTxt += "name: $name"
                 if (params != null && params.isNotEmpty()) {
@@ -59,7 +72,6 @@ class BaiduAsrManager {
         }
         Log.d(TAG, logTxt)
     }
-
 
     fun create(context: Context, params: Map<String, Any>, asrCallback: AsrCallback?) {
         this.asrCallback = asrCallback
