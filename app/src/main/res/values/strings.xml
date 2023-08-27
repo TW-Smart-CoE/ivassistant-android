@@ -3,5 +3,7 @@
     <string name="tts">TTS</string>
     <string name="asr">ASR</string>
     <string name="wake_up">WakeUp</string>
+    <string name="chat">CHAT</string>
     <string name="goodbye">Goodbye</string>
+    <string name="hello">hello</string>
 </resources>

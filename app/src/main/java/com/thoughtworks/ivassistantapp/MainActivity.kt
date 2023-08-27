@@ -38,7 +38,6 @@ import com.thoughtworks.ivassistant.abilities.wakeup.WakeUpCallback
 import com.thoughtworks.ivassistant.abilities.wakeup.WakeUpType
 import com.thoughtworks.ivassistantapp.ui.theme.IvassistantandroidTheme
 import com.thoughtworks.ivassistantapp.utils.MultiplePermissions
-import java.io.ByteArrayInputStream
 
 class MainActivity : ComponentActivity() {
     companion object {
@@ -209,16 +208,7 @@ class MainActivity : ComponentActivity() {
                             if (text.isEmpty()) {
                                 return
                             }
-
-                            chat.chat(text, object : ChatCallback {
-                                override fun onResult(text: String) {
-                                    tts.play(text)
-                                }
-
-                                override fun onError(errorMessage: String) {
-                                    Log.e(TAG, "chat onError: $errorMessage")
-                                }
-                            })
+                            tts.play(text)
                         }
 
                         override fun onError(errorMessage: String) {
@@ -274,6 +264,27 @@ class MainActivity : ComponentActivity() {
                 }
             ) {
                 Text(text = stringResource(id = R.string.wake_up))
+            }
+            Button(
+                modifier = Modifier
+                    .padding(top = 30.dp)
+                    .align(alignment = Alignment.CenterHorizontally)
+                    .width(200.dp)
+                    .wrapContentHeight(),
+                onClick = {
+                    Log.d(TAG, "chat")
+                    chat.chat(getString(R.string.hello), object : ChatCallback {
+                        override fun onResult(text: String) {
+                            tts.play(text)
+                        }
+
+                        override fun onError(errorMessage: String) {
+                            Log.e(TAG, "chat onError: $errorMessage")
+                        }
+                    })
+                }
+            ) {
+                Text(text = stringResource(id = R.string.chat))
             }
         }
     }

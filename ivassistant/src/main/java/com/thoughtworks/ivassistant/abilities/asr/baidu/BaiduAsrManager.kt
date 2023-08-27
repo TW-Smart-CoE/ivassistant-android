@@ -36,6 +36,7 @@ class BaiduAsrManager {
                         JSONObject(params).optString(BaiduAsrConstant.BEST_RESULT)
                     logTxt += "final recognition result：$bestResult"
                     asrCallback?.onResult(bestResult)
+                    asrCallback = null
                 } else {
                     logTxt += " params :$params"
                     if (data != null) {
@@ -46,11 +47,13 @@ class BaiduAsrManager {
 
             SpeechConstant.CALLBACK_EVENT_ASR_ERROR -> {
                 asrCallback?.onError(params)
+                asrCallback = null
             }
 
             SpeechConstant.CALLBACK_EVENT_ASR_FINISH -> {
                 if (logTxt.isEmpty()) {
                     asrCallback?.onResult("")
+                    asrCallback = null
                 }
             }
 
