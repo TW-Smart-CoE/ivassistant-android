@@ -91,6 +91,10 @@ class AliTtsCreator(
         ttsInstance.startTts("1", "", text)
     }
 
+    fun stop() {
+        ttsInstance.stopDialog()
+    }
+
     fun release() {
         ttsInstance.release()
     }

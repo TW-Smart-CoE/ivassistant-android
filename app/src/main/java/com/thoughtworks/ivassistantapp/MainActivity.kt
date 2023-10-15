@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -38,6 +39,9 @@ import com.thoughtworks.ivassistant.abilities.wakeup.WakeUpCallback
 import com.thoughtworks.ivassistant.abilities.wakeup.WakeUpType
 import com.thoughtworks.ivassistantapp.ui.theme.IvassistantandroidTheme
 import com.thoughtworks.ivassistantapp.utils.MultiplePermissions
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     companion object {
@@ -164,9 +168,24 @@ class MainActivity : ComponentActivity() {
         tts.initialize()
     }
 
+    private fun playTts(coroutineScope: CoroutineScope, text: String) {
+        coroutineScope.launch(Dispatchers.IO) {
+            tts.play(text, object : TtsCallback {
+                override fun onPlayEnd() {
+                    Log.d(TAG, "onPlayEnd")
+                }
+
+                override fun onTTSFileSaved(ttsFilePath: String) {
+                    Log.d(TAG, "onTTSFileSaved: $ttsFilePath")
+                }
+            })
+        }
+    }
+
     @Composable
     fun MainScreen() {
         val context = LocalContext.current
+        val composableScope = rememberCoroutineScope()
 
         Column(
             modifier = Modifier
@@ -180,15 +199,7 @@ class MainActivity : ComponentActivity() {
                     .width(200.dp)
                     .wrapContentHeight(),
                 onClick = {
-                    tts.play("你好，我是智能助理", object : TtsCallback {
-                        override fun onPlayEnd() {
-                            Log.d(TAG, "onPlayEnd")
-                        }
-
-                        override fun onTTSFileSaved(ttsFilePath: String) {
-                            Log.d(TAG, "onTTSFileSaved: $ttsFilePath")
-                        }
-                    })
+                    playTts(composableScope, "你好，我是智能助理")
                 }
             ) {
                 Text(text = stringResource(id = R.string.tts))

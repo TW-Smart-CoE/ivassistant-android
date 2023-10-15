@@ -101,6 +101,7 @@ class AliTts(
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun stopPlay() {
+        aliTtsCreator.stop()
         ttsPlayer?.release()
         ttsPlayer = null
         ttsCallback = null

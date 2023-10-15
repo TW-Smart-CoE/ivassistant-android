@@ -64,4 +64,12 @@ class AliTtsPcmPlayer(
         }
         audioTrack = null
     }
+
+    fun stop() {
+        audioTrack?.apply {
+            flush()
+            pause()
+            stop()
+        }
+    }
 }
