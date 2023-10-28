@@ -1,7 +1,7 @@
 package com.thoughtworks.ivassistant.abilities.wakeup
 
 interface WakeUpCallback {
-    fun onSuccess() {}
+    fun onSuccess(keywordIndex: Int) {}
     fun onError(errorCode: Int, errorMessage: String) {}
     fun onStop() {}
 }

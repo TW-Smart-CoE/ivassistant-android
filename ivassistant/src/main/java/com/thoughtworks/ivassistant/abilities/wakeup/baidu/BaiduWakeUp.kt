@@ -17,6 +17,7 @@ class BaiduWakeUp(
     private val params: Map<String, Any> = emptyMap(),
 ) : WakeUp {
     private var isInited = false
+    private var keywords: List<String>? = null
 
     private var wakeUpCallback: WakeUpCallback? = null
     private val wp: EventManager = EventManagerFactory.create(context, "wp")
@@ -28,7 +29,11 @@ class BaiduWakeUp(
                     if (result == null) {
                         this.wakeUpCallback?.onError(-1, "parse json error")
                     } else {
-                        this.wakeUpCallback?.onSuccess()
+                        if (keywords?.contains(result.word) == true) {
+                            this.wakeUpCallback?.onSuccess(keywords?.indexOf(result.word) ?: -1)
+                        } else {
+                            this.wakeUpCallback?.onSuccess(-1)
+                        }
                     }
                 }
 
@@ -74,6 +79,8 @@ class BaiduWakeUp(
         wpParams[SpeechConstant.WP_WORDS_FILE] =
             params[SpeechConstant.WP_WORDS_FILE] ?: "assets:///WakeUp.bin"
 
+        this.keywords = params["keywords"] as List<String>?
+
         Log.d(TAG, "wp_words_file: ${wpParams[SpeechConstant.WP_WORDS_FILE]}")
 
         val json = (wpParams as Map<*, *>?)?.let { JSONObject(it).toString() }
@@ -83,6 +90,7 @@ class BaiduWakeUp(
     override fun stop() {
         wp.send(SpeechConstant.WAKEUP_STOP, null, null, 0, 0)
         this.wakeUpCallback = null
+        this.keywords = null
     }
 
     override fun release() {

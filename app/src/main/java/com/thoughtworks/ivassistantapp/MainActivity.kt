@@ -106,6 +106,7 @@ class MainActivity : ComponentActivity() {
             WakeUpType.Baidu,
             mapOf(
                 Pair("kws-file", "assets:///WakeUp.bin"),
+                Pair("keywords", listOf("你好小智"))
             )
         )
 //        wakeUp = ivAssistant.createWakeUp(
@@ -242,8 +243,8 @@ class MainActivity : ComponentActivity() {
                     .wrapContentHeight(),
                 onClick = {
                     wakeUp.start(object : WakeUpCallback {
-                        override fun onSuccess() {
-                            Log.d(TAG, "wakeUp onSuccess")
+                        override fun onSuccess(keywordIndex: Int) {
+                            Log.d(TAG, "wakeUp onSuccess $keywordIndex")
                             tts.play("我在", object : TtsCallback {
                                 override fun onPlayEnd() {
                                     asr.startListening(object : AsrCallback {

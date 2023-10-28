@@ -32,7 +32,7 @@ class PicovoiceWakeUp(
                 .setKeywordPaths(keywordArray)
                 .build(context) { keywordIndex ->
                     if (keywordIndex < keywordCount) {
-                        wakeUpCallback?.onSuccess()
+                        wakeUpCallback?.onSuccess(keywordIndex)
                     } else {
                         Log.e(TAG, "keywordIndex out of range")
                         wakeUpCallback?.onError(-2, "keywordIndex out of range")

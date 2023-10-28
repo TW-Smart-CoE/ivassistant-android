@@ -1,0 +1,8 @@
+fileignoreconfig:
+- filename: app/src/main/java/com/thoughtworks/ivassistantapp/MainActivity.kt
+  checksum: cd82425c4a4b52db0fb211cd8ce3ff29950929a48ffbd6eb85814369087ab4c4
+- filename: ivassistant/src/main/java/com/thoughtworks/ivassistant/abilities/wakeup/WakeUp.kt
+  checksum: 66654693759bd5169b7a4a9a1935a602bb1487fec1029238febabbd7d3152445
+- filename: ivassistant/src/main/java/com/thoughtworks/ivassistant/abilities/wakeup/baidu/BaiduWakeUp.kt
+  checksum: 1882bd2e079e117b2229210d48afdf4e41ec9e995b8e22cdc7ca3b5c243a57cc
+version: "1.0"
