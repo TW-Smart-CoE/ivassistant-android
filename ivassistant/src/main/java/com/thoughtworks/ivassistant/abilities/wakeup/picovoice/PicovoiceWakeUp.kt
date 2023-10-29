@@ -22,7 +22,7 @@ class PicovoiceWakeUp(
             Array(keywordList.size) { i -> keywordList[i].toString() }
 
         try {
-            porcupineManager = PorcupineManager.Builder()
+            val builder = PorcupineManager.Builder()
                 .setAccessKey(
                     params["access_key"]?.toString() ?: context.getManifestMetaData(
                         META_DATA_ACCESS_KEY
@@ -30,14 +30,19 @@ class PicovoiceWakeUp(
                 )
 //                .setKeywords(arrayOf(Porcupine.BuiltInKeyword.PORCUPINE, Porcupine.BuiltInKeyword.BUMBLEBEE))
                 .setKeywordPaths(keywordArray)
-                .build(context) { keywordIndex ->
-                    if (keywordIndex < keywordCount) {
-                        wakeUpCallback?.onSuccess(keywordIndex)
-                    } else {
-                        Log.e(TAG, "keywordIndex out of range")
-                        wakeUpCallback?.onError(-2, "keywordIndex out of range")
-                    }
+
+            params["model_path"]?.let {
+                builder.setModelPath(it.toString())
+            }
+
+            porcupineManager = builder.build(context) { keywordIndex ->
+                if (keywordIndex < keywordCount) {
+                    wakeUpCallback?.onSuccess(keywordIndex)
+                } else {
+                    Log.e(TAG, "keywordIndex out of range")
+                    wakeUpCallback?.onError(-2, "keywordIndex out of range")
                 }
+            }
         } catch (e: Exception) {
             Log.e(TAG, e.message ?: "unknown error")
             wakeUpCallback?.onError(-1, e.message ?: "unknown error")

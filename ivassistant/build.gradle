@@ -73,7 +73,7 @@ dependencies {
     implementation("com.alibaba:fastjson:1.1.46.android")
 
     // picovoice
-    implementation("ai.picovoice:porcupine-android:2.2.0")
+    implementation("ai.picovoice:porcupine-android:3.0.0")
 
     // google
     implementation("com.google.cloud:google-cloud-texttospeech:2.19.0")
