@@ -2,7 +2,7 @@
 
 ## 配置
 
-[阿里智能语音配置](docs/zh/AliConfig.md)
+[阿里智能语音配置](AliConfig.md)
 
 ## 示例代码
 

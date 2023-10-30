@@ -2,7 +2,7 @@
 
 ## Configure
 
-[Ali intelligent voice configure](docs/zh/AliConfig.md)
+[Ali intelligent voice configure](AliConfig.md)
 
 ## Sample
 

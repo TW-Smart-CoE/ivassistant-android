@@ -2,7 +2,7 @@
 
 ## Configure
 
-[Baidu intelligent voice configure](docs/zh/BaiduConfig.md)
+[Baidu intelligent voice configure](BaiduConfig.md)
 
 ## Sample
 

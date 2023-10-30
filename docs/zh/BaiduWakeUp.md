@@ -2,7 +2,7 @@
 
 ## 配置
 
-[百度智能语音配置](docs/zh/BaiduConfig.md)
+[百度智能语音配置](BaiduConfig.md)
 
 ## 示例代码
 
