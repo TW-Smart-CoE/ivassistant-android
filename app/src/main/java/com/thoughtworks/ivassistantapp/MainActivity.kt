@@ -78,6 +78,7 @@ class MainActivity : ComponentActivity() {
         wakeUp.release()
         tts.release()
         asr.release()
+        chat.release()
         ivAssistant.release()
         super.onDestroy()
     }
@@ -99,6 +100,7 @@ class MainActivity : ComponentActivity() {
                 Pair("max_history_len", 20),
             )
         )
+        chat.initialize()
     }
 
     private fun createWakeUp() {

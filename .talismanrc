@@ -1,6 +1,26 @@
 fileignoreconfig:
 - filename: app/src/main/java/com/thoughtworks/ivassistantapp/MainActivity.kt
   checksum: d19f6e27d9ba596f5680bd88882053eb8e60bc4e5ff434de339e5adef069d184
+- filename: docs/en/BaiduConfig.md
+  checksum: 90aaf323272b153be797c5dbdcab59be54a19a107665d40277c6933e19d993a3
+- filename: docs/en/BaiduWakeUp.md
+  checksum: 055152d5c3c75d7f677aed2170c2c8c6f9fb3cf8f53ee4fe748794b017a93334
+- filename: docs/en/ChatGPT.md
+  checksum: 839929c6f7ad2060323f4a41287faaa13e5b64a520a5eb50c3558f83032928fc
+- filename: docs/en/GoogleTts.md
+  checksum: d4462601ec92ac41379008e4d5773545ab1f5cfc06cadac1822a96ab04050b46
+- filename: docs/en/PicovoiceWakeUp.md
+  checksum: 81976a93ef253ff0cc380b177963c7cf84ce328f8cc0b86853b5e200f3afb2c5
+- filename: docs/zh/AliConfig.md
+  checksum: d7fba28cf5bcdd5dbcca3377f66badf97b6fbb186943be184395a811ee730ae0
+- filename: docs/zh/BaiduWakeUp.md
+  checksum: e2de0718d095b9bfb26182c671b7c3b4c65298e43f6daad28a170d7c412daeb7
+- filename: docs/zh/ChatGPT.md
+  checksum: 31f2f6db7e09bf5507ddc15b974e92034e1ea2234a0be877a6fd1f189383936a
+- filename: docs/zh/GoogleTts.md
+  checksum: 864465a9eae1521747008f8eb3455b5477741bd92968bbbb1573597f665e99cb
+- filename: docs/zh/PicovoiceWakeUp.md
+  checksum: 3fd50be9b9a36cb147b69f314ec09ea3335315b7487f5e2e145b1f085e1ebb15
 - filename: ivassistant/src/main/java/com/thoughtworks/ivassistant/abilities/wakeup/WakeUp.kt
   checksum: 66654693759bd5169b7a4a9a1935a602bb1487fec1029238febabbd7d3152445
 - filename: ivassistant/src/main/java/com/thoughtworks/ivassistant/abilities/wakeup/baidu/BaiduWakeUp.kt
