@@ -2,6 +2,7 @@ package com.thoughtworks.ivassistant.abilities.tts.ali
 
 import android.content.Context
 import android.os.Build
+import android.os.SystemClock
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.thoughtworks.ivassistant.abilities.tts.Tts
@@ -93,7 +94,7 @@ class AliTts(
             try {
                 stopPlay()
                 // Wait for the previous player to be released
-                Thread.sleep(stopAndStartDelay.toLong())
+                SystemClock.sleep(stopAndStartDelay.toLong())
                 ttsPlayer = AliTtsPcmPlayer(ttsInitializer, encodeType)
             } catch (t: Throwable) {
                 Log.e(TAG, "Failed to create AliTtsPcmPlayer: ${t.message}")
