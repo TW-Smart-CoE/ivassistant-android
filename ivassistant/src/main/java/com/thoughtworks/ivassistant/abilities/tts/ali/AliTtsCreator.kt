@@ -77,7 +77,18 @@ class AliTtsCreator(
         }
     }
 
-    fun create(text: String) {
+    private fun formatSSML(
+        fontName: String,
+        emotion: String,
+        intensity: Float,
+        text: String
+    ): String {
+        return "<speak voice=\"$fontName\">\n" +
+                "    <emotion category=\"$emotion\" intensity=\"$intensity\">$text</emotion>\n" +
+                "</speak>"
+    }
+
+    fun create(text: String, playParams: Map<String, Any>) {
         if (!isInit) {
             initTTSInstance()
         }
@@ -88,7 +99,19 @@ class AliTtsCreator(
 
         val ttsVersion = if (charNum > MAX_TEXT_NUM) 1 else 0
         ttsInstance.setparamTts("tts_version", ttsVersion.toString())
-        ttsInstance.startTts("1", "", text)
+        if (playParams.isNotEmpty()) {
+            val fontName = playParams["font_name"]
+            fontName?.let {
+                if (it.toString().endsWith("_emo")) {
+                    val emotion = playParams["emotion"]?.toString() ?: "neutral"
+                    val intensity = playParams["intensity"]?.toString()?.toFloat() ?: 1.0f
+                    val ssml = formatSSML(it.toString(), emotion, intensity, text)
+                    ttsInstance.startTts("1", "", ssml)
+                }
+            }
+        } else {
+            ttsInstance.startTts("1", "", text)
+        }
     }
 
     fun stop() {

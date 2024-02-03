@@ -42,9 +42,7 @@ import com.thoughtworks.ivassistantapp.utils.MediaPlayerController
 import com.thoughtworks.ivassistantapp.utils.MultiplePermissions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.io.File
 
 class MainActivity : ComponentActivity() {
     companion object {
@@ -180,7 +178,11 @@ class MainActivity : ComponentActivity() {
 
     private fun playTts(coroutineScope: CoroutineScope, text: String) {
         coroutineScope.launch(Dispatchers.IO) {
-            tts.play(text, object : TtsCallback {
+            tts.play(text, mapOf(
+                "font_name" to "zhimi_emo",
+                "emotion" to "fear",
+                "intensity" to 2.0f
+            ), object : TtsCallback {
                 override fun onPlayEnd() {
                     Log.d(TAG, "onPlayEnd")
                 }
@@ -212,7 +214,7 @@ class MainActivity : ComponentActivity() {
                 onClick = {
                     playTts(
                         composableScope,
-                        "你好，我是智能助理，我的名字叫小智，请问你找我有什么事吗？"
+                        "你好，我是智能助理，我的名字叫小智，请问你找我有什么事吗?"
                     )
                 }
             ) {
@@ -258,7 +260,7 @@ class MainActivity : ComponentActivity() {
                     wakeUp.start(object : WakeUpCallback {
                         override fun onSuccess(keywordIndex: Int) {
                             Log.d(TAG, "wakeUp onSuccess $keywordIndex")
-                            tts.play("我在", object : TtsCallback {
+                            tts.play("我在", emptyMap(), object : TtsCallback {
                                 override fun onPlayEnd() {
                                     asr.startListening(object : AsrCallback {
                                         override fun onResult(text: String) {
@@ -321,7 +323,7 @@ class MainActivity : ComponentActivity() {
             override fun onResult(text: String) {
                 Log.d(TAG, "onResult: $text")
                 if (text.isNotEmpty()) {
-                    tts.play(text, object : TtsCallback {
+                    tts.play(text, emptyMap(), object : TtsCallback {
                         override fun onPlayEnd() {
                             Log.d(TAG, "onPlayEnd")
                             listenAndSay()

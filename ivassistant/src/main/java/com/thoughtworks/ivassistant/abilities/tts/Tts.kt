@@ -8,6 +8,6 @@ interface TtsCallback {
 interface Tts {
     fun initialize()
     fun release()
-    fun play(text: String, ttsCallback: TtsCallback? = null)
+    fun play(text: String, params: Map<String, Any> = emptyMap(), ttsCallback: TtsCallback? = null)
     fun stopPlay()
 }

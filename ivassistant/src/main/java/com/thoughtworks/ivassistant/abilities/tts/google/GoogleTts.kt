@@ -104,7 +104,7 @@ class GoogleTts(
         }
     }
 
-    override fun play(text: String, ttsCallback: TtsCallback?) {
+    override fun play(text: String, params: Map<String, Any>, ttsCallback: TtsCallback?) {
         stopPlay()
 
         val audioData = createAudioData(text)

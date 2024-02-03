@@ -12,24 +12,25 @@ import java.util.concurrent.ExecutorService
 
 class AliTts(
     private val context: Context,
-    private val params: Map<String, Any>,
+    private val ttsParams: Map<String, Any>,
     private val threadPool: ExecutorService,
 ) : Tts {
     private val ttsInitializer = AliTtsInitializer()
     private val ttsFileWriter = AliTtsFileWriter()
     private var ttsPlayer: AliTtsPcmPlayer? = null
     private var ttsCallback: TtsCallback? = null
-    private val encodeType = params["encode_type"]?.toString() ?: "pcm"
-    private val removeWavHeader = params["remove_wav_header"]?.toString()?.toBoolean() ?: true
-    private val playSound = params["play_sound"]?.toString()?.toBoolean() ?: true
+    private val encodeType = ttsParams["encode_type"]?.toString() ?: "pcm"
+    private val removeWavHeader = ttsParams["remove_wav_header"]?.toString()?.toBoolean() ?: true
+    private val playSound = ttsParams["play_sound"]?.toString()?.toBoolean() ?: true
+    private val stopAndStartDelay = ttsParams["stop_and_start_delay"]?.toString()?.toInt() ?: 100
     private var wavHeaderToBeRemove: Boolean = false
 
     init {
-        ttsFileWriter.ttsFilePath = params["tts_file_path"]?.toString() ?: ""
+        ttsFileWriter.ttsFilePath = ttsParams["tts_file_path"]?.toString() ?: ""
     }
 
     private val aliTtsCreator = AliTtsCreator(
-        params,
+        ttsParams,
         ttsInitializer,
         object : AliTtsCreator.Callback {
             override fun onTtsStart() {
@@ -73,7 +74,7 @@ class AliTts(
 
     override fun initialize() {
         threadPool.execute {
-            ttsInitializer.init(context, params)
+            ttsInitializer.init(context, ttsParams)
         }
     }
 
@@ -82,7 +83,7 @@ class AliTts(
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    override fun play(text: String, ttsCallback: TtsCallback?) {
+    override fun play(text: String, params: Map<String, Any>, ttsCallback: TtsCallback?) {
         if (!ttsInitializer.isInit) {
             Log.e(TAG, "TTS is not initialized!")
             return
@@ -92,7 +93,7 @@ class AliTts(
             try {
                 stopPlay()
                 // Wait for the previous player to be released
-                Thread.sleep(100)
+                Thread.sleep(stopAndStartDelay.toLong())
                 ttsPlayer = AliTtsPcmPlayer(ttsInitializer, encodeType)
             } catch (t: Throwable) {
                 Log.e(TAG, "Failed to create AliTtsPcmPlayer: ${t.message}")
@@ -102,7 +103,7 @@ class AliTts(
 
         this.ttsCallback = ttsCallback
         threadPool.execute {
-            aliTtsCreator.create(text)
+            aliTtsCreator.create(text, params)
         }
     }
 
