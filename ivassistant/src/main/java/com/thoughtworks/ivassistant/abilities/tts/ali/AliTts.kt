@@ -89,8 +89,15 @@ class AliTts(
         }
 
         if (playSound && encodeType != "mp3") {
-            stopPlay()
-            ttsPlayer = AliTtsPcmPlayer(ttsInitializer, encodeType)
+            try {
+                stopPlay()
+                // Wait for the previous player to be released
+                Thread.sleep(100)
+                ttsPlayer = AliTtsPcmPlayer(ttsInitializer, encodeType)
+            } catch (t: Throwable) {
+                Log.e(TAG, "Failed to create AliTtsPcmPlayer: ${t.message}")
+                return
+            }
         }
 
         this.ttsCallback = ttsCallback

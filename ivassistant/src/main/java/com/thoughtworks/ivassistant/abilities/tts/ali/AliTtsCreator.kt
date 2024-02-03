@@ -14,7 +14,7 @@ class AliTtsCreator(
 ) {
     interface Callback {
         fun onTtsStart()
-        fun onTtsDataArrived(data: AliTtsData)
+        fun onTtsDataArrived(ttsData: AliTtsData)
         fun onTtsEnd()
     }
 

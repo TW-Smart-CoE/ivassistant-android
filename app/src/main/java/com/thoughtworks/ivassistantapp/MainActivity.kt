@@ -38,10 +38,13 @@ import com.thoughtworks.ivassistant.abilities.wakeup.WakeUp
 import com.thoughtworks.ivassistant.abilities.wakeup.WakeUpCallback
 import com.thoughtworks.ivassistant.abilities.wakeup.WakeUpType
 import com.thoughtworks.ivassistantapp.ui.theme.IvassistantandroidTheme
+import com.thoughtworks.ivassistantapp.utils.MediaPlayerController
 import com.thoughtworks.ivassistantapp.utils.MultiplePermissions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.File
 
 class MainActivity : ComponentActivity() {
     companion object {
@@ -53,6 +56,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var asr: Asr
     private lateinit var wakeUp: WakeUp
     private lateinit var chat: Chat
+    private val mediaPlayerController = MediaPlayerController(this)
 
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -148,6 +152,7 @@ class MainActivity : ComponentActivity() {
                 Pair("enable_subtitle", "1"),
                 Pair("sample_rate", 16000),
                 Pair("encode_type", "wav"),
+                Pair("play_sound", true),
                 Pair("tts_file_path", "${externalCacheDir?.absolutePath}/tts.wav"),
             ),
         )
@@ -182,6 +187,7 @@ class MainActivity : ComponentActivity() {
 
                 override fun onTTSFileSaved(ttsFilePath: String) {
                     Log.d(TAG, "onTTSFileSaved: $ttsFilePath")
+//                    mediaPlayerController.play(File(ttsFilePath))
                 }
             })
         }
@@ -204,7 +210,10 @@ class MainActivity : ComponentActivity() {
                     .width(200.dp)
                     .wrapContentHeight(),
                 onClick = {
-                    playTts(composableScope, "你好，我是智能助理")
+                    playTts(
+                        composableScope,
+                        "你好，我是智能助理，我的名字叫小智，请问你找我有什么事吗？"
+                    )
                 }
             ) {
                 Text(text = stringResource(id = R.string.tts))

@@ -57,11 +57,7 @@ class AliTtsPcmPlayer(
     }
 
     fun release() {
-        audioTrack?.apply {
-            flush()
-            pause()
-            stop()
-        }
+        stop()
         audioTrack = null
     }
 
