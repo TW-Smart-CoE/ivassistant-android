@@ -5,6 +5,7 @@ import com.alibaba.idst.nui.Constants
 import com.alibaba.idst.nui.INativeTtsCallback
 import com.alibaba.idst.nui.NativeNui
 import com.thoughtworks.ivassistant.abilities.tts.ali.AliTtsConstant.TAG
+import java.util.*
 
 
 class AliTtsCreator(
@@ -16,10 +17,12 @@ class AliTtsCreator(
         fun onTtsStart()
         fun onTtsDataArrived(ttsData: AliTtsData)
         fun onTtsEnd()
+        fun onTtsCancel()
     }
 
     private var isInit = false
     private val ttsInstance = NativeNui(Constants.ModeType.MODE_TTS)
+    private var currentTaskId = ""
 
     private fun initTTSInstance() {
         if (isInit) {
@@ -35,6 +38,7 @@ class AliTtsCreator(
                     taskId: String,
                     resultCode: Int
                 ) {
+                    Log.d(TAG, "onTtsEventCallback event:$event taskId:$taskId resultCode:$resultCode")
                     when (event) {
                         INativeTtsCallback.TtsEvent.TTS_EVENT_START -> {
                             callback.onTtsStart()
@@ -42,6 +46,10 @@ class AliTtsCreator(
 
                         INativeTtsCallback.TtsEvent.TTS_EVENT_END -> {
                             callback.onTtsEnd()
+                        }
+
+                        INativeTtsCallback.TtsEvent.TTS_EVENT_CANCEL -> {
+                            callback.onTtsCancel()
                         }
 
                         INativeTtsCallback.TtsEvent.TTS_EVENT_ERROR -> {
@@ -106,16 +114,38 @@ class AliTtsCreator(
                     val emotion = playParams["emotion"]?.toString() ?: "neutral"
                     val intensity = playParams["intensity"]?.toString()?.toFloat() ?: 1.0f
                     val ssml = formatSSML(it.toString(), emotion, intensity, text)
-                    ttsInstance.startTts("1", "", ssml)
+                    ttsInstance.startTts("1", generateTaskId(), ssml)
                 }
             }
         } else {
-            ttsInstance.startTts("1", "", text)
+            ttsInstance.startTts("1", generateTaskId(), text)
         }
     }
 
+    @Synchronized
+    fun generateTaskId(): String {
+        currentTaskId = UUID.randomUUID().toString().replace("-", "")
+        return currentTaskId
+    }
+
+    @Synchronized
+    fun getCurrentTaskId(): String {
+        return currentTaskId
+    }
+
+    @Synchronized
+    fun clearCurrentTaskId() {
+        currentTaskId = ""
+    }
+
     fun stop() {
+        getCurrentTaskId().let {
+            if (it.isNotEmpty()) {
+                ttsInstance.cancelTts(it)
+            }
+        }
         ttsInstance.stopDialog()
+        clearCurrentTaskId()
     }
 
     fun release() {

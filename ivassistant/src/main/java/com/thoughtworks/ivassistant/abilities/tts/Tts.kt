@@ -2,6 +2,7 @@ package com.thoughtworks.ivassistant.abilities.tts
 
 interface TtsCallback {
     fun onPlayEnd() {}
+    fun onPlayCancel() {}
     fun onTTSFileSaved(ttsFilePath: String) {}
 }
 

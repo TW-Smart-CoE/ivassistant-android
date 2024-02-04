@@ -7,10 +7,14 @@ import java.io.File
 
 class MediaPlayerController(private val context: Context) {
     private var mediaPlayer: MediaPlayer? = null
-    fun play(soundFile: File, volume: Float = 1f) {
+
+    fun play(soundFile: File, volume: Float = 1f, onCompletionListener: (() -> Unit)?) {
         stop()
         mediaPlayer = MediaPlayer.create(context, Uri.fromFile(soundFile))
         mediaPlayer?.apply {
+            setOnCompletionListener {
+                onCompletionListener?.invoke()
+            }
             setVolume(volume, volume)
             start()
         }

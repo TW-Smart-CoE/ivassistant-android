@@ -11,6 +11,7 @@ import com.thoughtworks.ivassistant.abilities.tts.ali.AliTtsConstant.TAG
 import java.util.*
 import java.util.concurrent.ExecutorService
 
+@RequiresApi(Build.VERSION_CODES.M)
 class AliTts(
     private val context: Context,
     private val ttsParams: Map<String, Any>,
@@ -18,16 +19,17 @@ class AliTts(
 ) : Tts {
     private val ttsInitializer = AliTtsInitializer()
     private val ttsFileWriter = AliTtsFileWriter()
-    private var ttsPlayer: AliTtsPcmPlayer? = null
+    private val pcmPlayer: AliTtsPcmPlayer
     private var ttsCallback: TtsCallback? = null
     private val encodeType = ttsParams["encode_type"]?.toString() ?: "pcm"
     private val removeWavHeader = ttsParams["remove_wav_header"]?.toString()?.toBoolean() ?: true
     private val playSound = ttsParams["play_sound"]?.toString()?.toBoolean() ?: true
-    private val stopAndStartDelay = ttsParams["stop_and_start_delay"]?.toString()?.toInt() ?: 100
+    private val stopAndStartDelay = ttsParams["stop_and_start_delay"]?.toString()?.toInt() ?: 50
     private var wavHeaderToBeRemove: Boolean = false
 
     init {
         ttsFileWriter.ttsFilePath = ttsParams["tts_file_path"]?.toString() ?: ""
+        pcmPlayer = AliTtsPcmPlayer(ttsInitializer)
     }
 
     private val aliTtsCreator = AliTtsCreator(
@@ -51,7 +53,7 @@ class AliTts(
                 wavHeaderToBeRemove = false
 
                 if (playSound && encodeType != "mp3") {
-                    ttsPlayer?.writeData(newAudioData)
+                    pcmPlayer.writeData(newAudioData)
                 }
 
                 if (ttsFileWriter.ttsFilePath.isNotEmpty()) {
@@ -59,19 +61,27 @@ class AliTts(
                 }
             }
 
-            @RequiresApi(Build.VERSION_CODES.M)
             override fun onTtsEnd() {
-                ttsFileWriter.closeFile()
-                if (ttsFileWriter.ttsFilePath.isNotEmpty()) {
-                    ttsCallback?.onTTSFileSaved(ttsFileWriter.ttsFilePath)
-                }
-
+                finishFileWrite()
                 wavHeaderToBeRemove = false
-
                 ttsCallback?.onPlayEnd()
+
                 stopPlay()
             }
+
+            override fun onTtsCancel() {
+                finishFileWrite()
+                wavHeaderToBeRemove = false
+                ttsCallback?.onPlayCancel()
+            }
         })
+
+    private fun finishFileWrite() {
+        ttsFileWriter.closeFile()
+        if (ttsFileWriter.ttsFilePath.isNotEmpty()) {
+            ttsCallback?.onTTSFileSaved(ttsFileWriter.ttsFilePath)
+        }
+    }
 
     override fun initialize() {
         threadPool.execute {
@@ -80,6 +90,7 @@ class AliTts(
     }
 
     override fun release() {
+        pcmPlayer.stop()
         aliTtsCreator.release()
     }
 
@@ -93,9 +104,7 @@ class AliTts(
         if (playSound && encodeType != "mp3") {
             try {
                 stopPlay()
-                // Wait for the previous player to be released
-                SystemClock.sleep(stopAndStartDelay.toLong())
-                ttsPlayer = AliTtsPcmPlayer(ttsInitializer, encodeType)
+                pcmPlayer.start()
             } catch (t: Throwable) {
                 Log.e(TAG, "Failed to create AliTtsPcmPlayer: ${t.message}")
                 return
@@ -104,6 +113,8 @@ class AliTts(
 
         this.ttsCallback = ttsCallback
         threadPool.execute {
+            // Wait for the previous tts play clear
+            SystemClock.sleep(stopAndStartDelay.toLong())
             aliTtsCreator.create(text, params)
         }
     }
@@ -111,8 +122,7 @@ class AliTts(
     @RequiresApi(Build.VERSION_CODES.M)
     override fun stopPlay() {
         aliTtsCreator.stop()
-        ttsPlayer?.release()
-        ttsPlayer = null
+        pcmPlayer.stop()
         ttsCallback = null
     }
 }

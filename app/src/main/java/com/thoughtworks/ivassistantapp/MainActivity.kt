@@ -43,6 +43,8 @@ import com.thoughtworks.ivassistantapp.utils.MultiplePermissions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.ByteArrayInputStream
+import java.io.File
 
 class MainActivity : ComponentActivity() {
     companion object {
@@ -160,7 +162,7 @@ class MainActivity : ComponentActivity() {
 //                Pair(
 //                    "credentials", ByteArrayInputStream(
 //                        """
-//                           // your google credentials in json format
+//                            {{Google TTS credentials JSON string}}
 //                        """.toByteArray()
 //                    )
 //                ),
@@ -181,10 +183,14 @@ class MainActivity : ComponentActivity() {
             tts.play(text, mapOf(
                 "font_name" to "zhimi_emo",
                 "emotion" to "fear",
-                "intensity" to 2.0f
+                "intensity" to 1.0f
             ), object : TtsCallback {
                 override fun onPlayEnd() {
                     Log.d(TAG, "onPlayEnd")
+                }
+
+                override fun onPlayCancel() {
+                    Log.d(TAG, "onPlayCancel")
                 }
 
                 override fun onTTSFileSaved(ttsFilePath: String) {

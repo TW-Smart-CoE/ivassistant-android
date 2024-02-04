@@ -22,7 +22,7 @@ class GoogleTts(
     private val params: Map<String, Any>
 ) : Tts {
     private var textToSpeechClient: TextToSpeechClient? = null
-    private var mediaPlayer = MediaPlayer()
+    private val mediaPlayer = MediaPlayer()
 
     override fun initialize() {
         val credentials = GoogleCredentials.fromStream(params["credentials"] as InputStream)
@@ -105,12 +105,16 @@ class GoogleTts(
     }
 
     override fun play(text: String, params: Map<String, Any>, ttsCallback: TtsCallback?) {
-        stopPlay()
+        if (mediaPlayer.isPlaying) {
+            mediaPlayer.stop()
+            Log.d(TAG, "mediaPlayer onCancel")
+            ttsCallback?.onPlayCancel()
+        }
 
         val audioData = createAudioData(text)
 
         try {
-            val tempFile = File.createTempFile("audio", "mp3")
+            val tempFile = File.createTempFile("audio", ".mp3")
             tempFile.deleteOnExit()
             val fos = FileOutputStream(tempFile)
             fos.write(audioData)
@@ -118,8 +122,7 @@ class GoogleTts(
 
             ttsCallback?.onTTSFileSaved(tempFile.absolutePath)
 
-            // play audio
-            mediaPlayer = MediaPlayer()
+            mediaPlayer.reset()
             mediaPlayer.setDataSource(tempFile.absolutePath)
             mediaPlayer.prepare()
             mediaPlayer.start()
@@ -134,12 +137,9 @@ class GoogleTts(
             mediaPlayer.setOnErrorListener { _, _, _ ->
                 Log.e(TAG, "mediaPlayer onError")
 //                mutex.unlock()
-                ttsCallback?.onPlayEnd()
                 return@setOnErrorListener true
             }
-
 //            mutex.lock()
-            Log.d(TAG, "Tts ends")
         } catch (e: Exception) {
             e.message?.let { Log.e(TAG, it) }
             Log.e(TAG, "play audio end error")

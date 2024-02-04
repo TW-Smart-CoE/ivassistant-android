@@ -5,19 +5,19 @@ import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 
 @RequiresApi(Build.VERSION_CODES.M)
 class AliTtsPcmPlayer(
-    ttsInitializer: AliTtsInitializer,
-    encodeType: String,
+    ttsInitializer: AliTtsInitializer
 ) {
-    private fun getEncodeType(encodeType: String): Int {
+    private fun getEncodeType(): Int {
         return AudioFormat.ENCODING_PCM_16BIT
     }
 
-    private val encode = getEncodeType(encodeType)
-    private var audioTrack: AudioTrack? = null
+    private val encode = getEncodeType()
+    private val audioTrack: AudioTrack
     private val sampleRate = ttsInitializer.ttsParams.sampleRate
     private val minBufferSize: Int = AudioTrack.getMinBufferSize(
         sampleRate,
@@ -26,11 +26,6 @@ class AliTtsPcmPlayer(
     ) * 2
 
     init {
-        initAudioTrack()
-    }
-
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun initAudioTrack() {
         audioTrack = AudioTrack.Builder()
             .setAudioAttributes(
                 AudioAttributes.Builder()
@@ -48,24 +43,23 @@ class AliTtsPcmPlayer(
             .setBufferSizeInBytes(minBufferSize)
             .setTransferMode(AudioTrack.MODE_STREAM)
             .build()
+    }
 
-        audioTrack?.play()
+    fun start() {
+        audioTrack.play()
+        Log.d(AliTtsConstant.TAG, "AliTtsPcmPlayer start")
     }
 
     fun writeData(data: ByteArray) {
-        audioTrack?.write(data, 0, data.size)
-    }
-
-    fun release() {
-        stop()
-        audioTrack = null
+        audioTrack.write(data, 0, data.size)
     }
 
     fun stop() {
-        audioTrack?.apply {
+        audioTrack.apply {
             flush()
             pause()
             stop()
+            Log.d(AliTtsConstant.TAG, "AliTtsPcmPlayer stop")
         }
     }
 }
