@@ -43,8 +43,6 @@ import com.thoughtworks.ivassistantapp.utils.MultiplePermissions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.ByteArrayInputStream
-import java.io.File
 
 class MainActivity : ComponentActivity() {
     companion object {

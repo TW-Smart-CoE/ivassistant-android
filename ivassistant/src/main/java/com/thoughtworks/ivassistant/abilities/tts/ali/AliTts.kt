@@ -3,12 +3,12 @@ package com.thoughtworks.ivassistant.abilities.tts.ali
 import android.content.Context
 import android.os.Build
 import android.os.SystemClock
+import android.text.TextUtils
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.thoughtworks.ivassistant.abilities.tts.Tts
 import com.thoughtworks.ivassistant.abilities.tts.TtsCallback
 import com.thoughtworks.ivassistant.abilities.tts.ali.AliTtsConstant.TAG
-import java.util.*
 import java.util.concurrent.ExecutorService
 
 @RequiresApi(Build.VERSION_CODES.M)
@@ -98,6 +98,11 @@ class AliTts(
     override fun play(text: String, params: Map<String, Any>, ttsCallback: TtsCallback?) {
         if (!ttsInitializer.isInit) {
             Log.e(TAG, "TTS is not initialized!")
+            return
+        }
+
+        if (TextUtils.isEmpty(text)) {
+            ttsCallback?.onPlayEnd()
             return
         }
 

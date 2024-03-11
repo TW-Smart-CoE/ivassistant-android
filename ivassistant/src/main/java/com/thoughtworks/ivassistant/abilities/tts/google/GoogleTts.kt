@@ -2,6 +2,7 @@ package com.thoughtworks.ivassistant.abilities.tts.google
 
 import android.content.Context
 import android.media.MediaPlayer
+import android.text.TextUtils
 import android.util.Log
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.texttospeech.v1.AudioConfig
@@ -109,6 +110,11 @@ class GoogleTts(
             mediaPlayer.stop()
             Log.d(TAG, "mediaPlayer onCancel")
             ttsCallback?.onPlayCancel()
+        }
+
+        if (TextUtils.isEmpty(text)) {
+            ttsCallback?.onPlayEnd()
+            return
         }
 
         val audioData = createAudioData(text)
