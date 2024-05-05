@@ -1,6 +1,8 @@
 package com.thoughtworks.ivassistant
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.thoughtworks.ivassistant.abilities.asr.Asr
 import com.thoughtworks.ivassistant.abilities.asr.AsrType
 import com.thoughtworks.ivassistant.abilities.asr.ali.AliAsr
@@ -21,6 +23,7 @@ import java.util.concurrent.Executors
 class IVAssistant(private val context: Context) {
     private val threadPool = Executors.newCachedThreadPool()
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun createTts(ttsType: TtsType, params: Map<String, Any> = emptyMap()): Tts {
         return when (ttsType) {
             TtsType.Ali -> AliTts(context, params, threadPool)

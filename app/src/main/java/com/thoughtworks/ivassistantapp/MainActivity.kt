@@ -1,10 +1,12 @@
 package com.thoughtworks.ivassistantapp
 
+import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -142,6 +144,7 @@ class MainActivity : ComponentActivity() {
         asr.initialize()
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun createTts() {
         tts = ivAssistant.createTts(
             TtsType.Ali,
