@@ -18,6 +18,7 @@ class AliTtsCreator(
         fun onTtsDataArrived(ttsData: AliTtsData)
         fun onTtsEnd()
         fun onTtsCancel()
+        fun onTtsError(errorMessage: String)
     }
 
     private var isInit = false
@@ -55,6 +56,7 @@ class AliTtsCreator(
                         INativeTtsCallback.TtsEvent.TTS_EVENT_ERROR -> {
                             val errorMsg = ttsInstance.getparamTts("error_msg")
                             Log.e(TAG, "TTS_EVENT_ERROR error_code:$resultCode err_msg:$errorMsg")
+                            callback.onTtsError(errorMsg)
                         }
 
                         else -> {}

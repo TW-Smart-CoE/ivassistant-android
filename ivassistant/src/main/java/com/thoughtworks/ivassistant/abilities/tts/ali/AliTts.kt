@@ -74,6 +74,10 @@ class AliTts(
                 wavHeaderToBeRemove = false
                 ttsCallback?.onPlayCancel()
             }
+
+            override fun onTtsError(errorMessage: String) {
+                ttsCallback?.onPlayError(errorMessage)
+            }
         })
 
     private fun finishFileWrite() {

@@ -234,25 +234,28 @@ class MainActivity : ComponentActivity() {
                     .width(200.dp)
                     .wrapContentHeight(),
                 onClick = {
+                    tts.release()
+                    createTts()
+                    tts.initialize()
 //                    listenAndSay()
-                    Log.d(TAG, "startListening")
-                    asr.startListening(object : AsrCallback {
-                        override fun onResult(text: String) {
-                            Log.d(TAG, "asr onResult: $text")
-                            if (text.isEmpty()) {
-                                return
-                            }
-                            tts.play(text)
-                        }
-
-                        override fun onError(errorMessage: String) {
-                            Log.e(TAG, "onError: $errorMessage")
-                        }
-
-                        override fun onVolumeChanged(volume: Float) {
-                            Log.d(TAG, "onVolumeChanged: $volume")
-                        }
-                    })
+//                    Log.d(TAG, "startListening")
+//                    asr.startListening(object : AsrCallback {
+//                        override fun onResult(text: String) {
+//                            Log.d(TAG, "asr onResult: $text")
+//                            if (text.isEmpty()) {
+//                                return
+//                            }
+//                            tts.play(text)
+//                        }
+//
+//                        override fun onError(errorMessage: String) {
+//                            Log.e(TAG, "onError: $errorMessage")
+//                        }
+//
+//                        override fun onVolumeChanged(volume: Float) {
+//                            Log.d(TAG, "onVolumeChanged: $volume")
+//                        }
+//                    })
                 }
             ) {
                 Text(text = stringResource(id = R.string.asr))
@@ -283,6 +286,14 @@ class MainActivity : ComponentActivity() {
 
                                 override fun onTTSFileSaved(ttsFilePath: String) {
                                     Log.d(TAG, "onTTSFileSaved: $ttsFilePath")
+                                }
+
+                                override fun onPlayError(errorMessage: String) {
+                                    Log.e(TAG, "onPlayError: $errorMessage")
+                                }
+
+                                override fun onPlayCancel() {
+                                    Log.w(TAG, "onPlayCancel")
                                 }
                             })
                         }

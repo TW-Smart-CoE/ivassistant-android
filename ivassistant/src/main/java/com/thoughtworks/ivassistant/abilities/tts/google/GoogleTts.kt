@@ -140,14 +140,17 @@ class GoogleTts(
                 ttsCallback?.onPlayEnd()
             }
 
-            mediaPlayer.setOnErrorListener { _, _, _ ->
-                Log.e(TAG, "mediaPlayer onError")
+            mediaPlayer.setOnErrorListener { _, what, extra ->
+                val errorMessage = "mediaPlayer error (what: $what, extra: $extra)"
+                Log.e(TAG, errorMessage)
 //                mutex.unlock()
+                ttsCallback?.onPlayError(errorMessage)
                 return@setOnErrorListener true
             }
 //            mutex.lock()
         } catch (e: Exception) {
             e.message?.let { Log.e(TAG, it) }
+            ttsCallback?.onPlayError(e.message ?: "Unknown")
             Log.e(TAG, "play audio end error")
         }
     }
