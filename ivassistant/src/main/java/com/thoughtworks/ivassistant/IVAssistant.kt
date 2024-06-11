@@ -18,6 +18,7 @@ import com.thoughtworks.ivassistant.abilities.tts.google.GoogleTts
 import com.thoughtworks.ivassistant.abilities.wakeup.WakeUp
 import com.thoughtworks.ivassistant.abilities.wakeup.WakeUpType
 import com.thoughtworks.ivassistant.abilities.wakeup.baidu.BaiduWakeUp
+import com.thoughtworks.ivassistant.abilities.wakeup.iflytek.IflytekWakeUp
 import com.thoughtworks.ivassistant.abilities.wakeup.picovoice.PicovoiceWakeUp
 import java.util.concurrent.Executors
 
@@ -46,6 +47,7 @@ class IVAssistant(private val context: Context) {
         return when (wakeUpType) {
             WakeUpType.Baidu -> BaiduWakeUp(context, params)
             WakeUpType.Picovoice -> PicovoiceWakeUp(context, params)
+            WakeUpType.Iflytek -> IflytekWakeUp(context, params)
             else -> throw IllegalArgumentException("Not supported type: ${wakeUpType.name}!")
         }
     }

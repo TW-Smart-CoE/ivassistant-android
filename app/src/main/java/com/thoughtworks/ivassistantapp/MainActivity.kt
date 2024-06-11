@@ -113,26 +113,32 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun createWakeUp() {
-//        wakeUp = ivAssistant.createWakeUp(
-//            WakeUpType.Baidu,
-//            mapOf(
-//                Pair("kws-file", "assets:///WakeUp.bin"),
-//                Pair("keywords", listOf("你好小智"))
-//            )
-//        )
         wakeUp = ivAssistant.createWakeUp(
-            WakeUpType.Picovoice,
+            WakeUpType.Baidu,
             mapOf(
-                Pair(
-                    "keyword_paths", listOf(
-//                        "wakeup/picovoice/Hi-Joey_en_android_v2_2_0.ppn", // 注意这里的文件路径不要加 assets:/// 前缀
-//                        "wakeup/picovoice/Hello-Joey_en_android_v2_2_0.ppn",
-                        "wakeup/picovoice/丽芙丽芙_zh_android_v3_0_0.ppn",
-                    )
-                ),
-                Pair("model_path", "wakeup/picovoice/models/porcupine_params_zh.pv"),
+                Pair("kws-file", "assets:///WakeUp.bin"),
+                Pair("keywords", listOf("你好小智"))
             )
         )
+//        wakeUp = ivAssistant.createWakeUp(
+//            WakeUpType.Picovoice,
+//            mapOf(
+//                Pair(
+//                    "keyword_paths", listOf(
+////                        "wakeup/picovoice/Hi-Joey_en_android_v2_2_0.ppn", // 注意这里的文件路径不要加 assets:/// 前缀
+////                        "wakeup/picovoice/Hello-Joey_en_android_v2_2_0.ppn",
+//                        "wakeup/picovoice/丽芙丽芙_zh_android_v3_0_0.ppn",
+//                    )
+//                ),
+//                Pair("model_path", "wakeup/picovoice/models/porcupine_params_zh.pv"),
+//            )
+//        )
+//        wakeUp = ivAssistant.createWakeUp(
+//            WakeUpType.Iflytek,
+//            mapOf(
+//                Pair("keywords", "wakeup/iflytek/xiaozhi.jet")
+//            )
+//        )
         wakeUp.initialize()
     }
 
@@ -146,7 +152,9 @@ class MainActivity : ComponentActivity() {
 //            )
 //        )
 //        asr = ivAssistant.createAsr(AsrType.Baidu, mapOf())
-        asr = ivAssistant.createAsr(AsrType.Iflytek, mapOf())
+        asr = ivAssistant.createAsr(AsrType.Iflytek, mapOf(
+            Pair("app_id", "02965492"),
+        ))
         asr.initialize()
     }
 
