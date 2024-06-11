@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.thoughtworks.ivassistant.IVAssistant
 import com.thoughtworks.ivassistant.abilities.asr.Asr
@@ -58,6 +59,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var chat: Chat
     private val mediaPlayerController = MediaPlayerController(this)
 
+    @RequiresApi(Build.VERSION_CODES.M)
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,11 +89,14 @@ class MainActivity : ComponentActivity() {
         super.onDestroy()
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun initialize() {
-        createTts()
-        createAsr()
-        createWakeUp()
-        createChat()
+        lifecycleScope.launch(Dispatchers.IO) {
+            createTts()
+            createAsr()
+            createWakeUp()
+            createChat()
+        }
     }
 
     private fun createChat() {
@@ -132,7 +137,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun createAsr() {
-//        asr = ivAssistant.createAsr(
+        //        asr = ivAssistant.createAsr(
 //            AsrType.Ali,
 //            mapOf(
 //                Pair("enable_voice_detection", true),
@@ -140,7 +145,8 @@ class MainActivity : ComponentActivity() {
 //                Pair("max_end_silence", 800),
 //            )
 //        )
-        asr = ivAssistant.createAsr(AsrType.Baidu, mapOf())
+//        asr = ivAssistant.createAsr(AsrType.Baidu, mapOf())
+        asr = ivAssistant.createAsr(AsrType.Iflytek, mapOf())
         asr.initialize()
     }
 
@@ -234,7 +240,7 @@ class MainActivity : ComponentActivity() {
                     .width(200.dp)
                     .wrapContentHeight(),
                 onClick = {
-                    listenAndSay()
+//                    listenAndSay()
                     Log.d(TAG, "startListening")
                     asr.startListening(object : AsrCallback {
                         override fun onResult(text: String) {

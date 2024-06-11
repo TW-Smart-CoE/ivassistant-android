@@ -7,6 +7,7 @@ import com.thoughtworks.ivassistant.abilities.asr.Asr
 import com.thoughtworks.ivassistant.abilities.asr.AsrType
 import com.thoughtworks.ivassistant.abilities.asr.ali.AliAsr
 import com.thoughtworks.ivassistant.abilities.asr.baidu.BaiduAsr
+import com.thoughtworks.ivassistant.abilities.asr.iflytek.IflytekAsr
 import com.thoughtworks.ivassistant.abilities.chat.Chat
 import com.thoughtworks.ivassistant.abilities.chat.ChatType
 import com.thoughtworks.ivassistant.abilities.chat.chatgpt.ChatGpt
@@ -36,6 +37,7 @@ class IVAssistant(private val context: Context) {
         return when (asrType) {
             AsrType.Ali -> AliAsr(context, params, threadPool)
             AsrType.Baidu -> BaiduAsr(context, params)
+            AsrType.Iflytek -> IflytekAsr(context, params)
             else -> throw IllegalArgumentException("Not supported type: ${asrType.name}!")
         }
     }
