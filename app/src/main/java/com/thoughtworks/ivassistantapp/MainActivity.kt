@@ -137,7 +137,7 @@ class MainActivity : ComponentActivity() {
         wakeUp = ivAssistant.createWakeUp(
             WakeUpType.Iflytek,
             mapOf(
-                Pair("keywords", "wakeup/iflytek/xiaozhi.jet"),
+                Pair("ivw_res_path_assets", "wakeup/iflytek/xiaozhi.jet"),
                 Pair("ivw_threshold", 1450),
                 Pair("keep_live", 1),
             )

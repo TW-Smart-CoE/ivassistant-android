@@ -120,6 +120,7 @@ class IflytekAsr(
         }
 
         override fun onEvent(p0: Int, p1: Int, p2: Int, p3: Bundle?) {
+            Log.d(TAG, "onEvent: $p0 $p1 $p2 $p3")
         }
     }
 

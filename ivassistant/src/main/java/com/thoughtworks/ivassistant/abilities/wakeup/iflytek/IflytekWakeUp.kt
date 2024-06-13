@@ -88,7 +88,7 @@ class IflytekWakeUp(
     }
 
     private fun getResource(): String {
-        val resPath = ResourceUtil.generateResourcePath(context , RESOURCE_TYPE.assets, params["keywords"].toString())
+        val resPath = ResourceUtil.generateResourcePath(context , RESOURCE_TYPE.assets, params["ivw_res_path_assets"].toString())
         return resPath
     }
 
