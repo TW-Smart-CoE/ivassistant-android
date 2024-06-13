@@ -20,7 +20,6 @@ import com.iflytek.cloud.util.ResourceUtil.RESOURCE_TYPE
 import com.iflytek.cloud.util.ResourceUtil
 
 
-
 class IflytekWakeUp(
     val context: Context,
     val params: Map<String, Any> = mapOf(),
@@ -52,7 +51,9 @@ class IflytekWakeUp(
         ivw.stopListening()
         ivw.setParameter(SpeechConstant.IVW_SST, "wakeup")
         ivw.setParameter(SpeechConstant.IVW_RES_PATH, getResource())
-        ivw.setParameter(SpeechConstant.IVW_NET_MODE, "1")
+        ivw.setParameter(SpeechConstant.IVW_NET_MODE, params["ivw_net_mode"]?.toString() ?: "1")
+        ivw.setParameter(SpeechConstant.IVW_THRESHOLD, params["ivw_threshold"]?.toString() ?: "1450")
+        ivw.setParameter(SpeechConstant.KEEP_ALIVE, params["keep_live"]?.toString() ?: "1")
         ivw.startListening(object : WakeuperListener {
             override fun onBeginOfSpeech() {
             }
@@ -66,9 +67,11 @@ class IflytekWakeUp(
 
             override fun onError(error: SpeechError) {
                 Log.e(TAG, "onError: ${error.errorCode}, ${error.errorDescription}")
+                wakeUpCallback?.onError(error.errorCode, error.errorDescription)
             }
 
             override fun onEvent(eventType: Int, isLast: Int, arg2: Int, obj: Bundle?) {
+                Log.d(TAG, "onEvent: $eventType, $isLast, $arg2, $obj")
             }
 
             override fun onVolumeChanged(volume: Int) {
@@ -86,11 +89,10 @@ class IflytekWakeUp(
 
     private fun getResource(): String {
         val resPath = ResourceUtil.generateResourcePath(context , RESOURCE_TYPE.assets, params["keywords"].toString())
-        Log.d(TAG, "resPath: $resPath")
         return resPath
     }
 
     companion object {
-        private const val TAG = "IflytekWakeUp"
+        private const val TAG = "IV.IflytekWakeUp"
     }
 }

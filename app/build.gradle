@@ -31,6 +31,12 @@ android {
         manifestPlaceholders["IFLYTEK_IVS_APP_ID"] = System.getenv("IFLYTEK_IVS_APP_ID") ?: ""
     }
 
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['src/main/jniLibs/iflytek']
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false

@@ -27,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.iflytek.cloud.SpeechConstant
 import com.thoughtworks.ivassistant.IVAssistant
 import com.thoughtworks.ivassistant.abilities.asr.Asr
 import com.thoughtworks.ivassistant.abilities.asr.AsrCallback
@@ -113,13 +114,13 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun createWakeUp() {
-        wakeUp = ivAssistant.createWakeUp(
-            WakeUpType.Baidu,
-            mapOf(
-                Pair("kws-file", "assets:///WakeUp.bin"),
-                Pair("keywords", listOf("你好小智"))
-            )
-        )
+//        wakeUp = ivAssistant.createWakeUp(
+//            WakeUpType.Baidu,
+//            mapOf(
+//                Pair("kws-file", "assets:///WakeUp.bin"),
+//                Pair("keywords", listOf("你好小智"))
+//            )
+//        )
 //        wakeUp = ivAssistant.createWakeUp(
 //            WakeUpType.Picovoice,
 //            mapOf(
@@ -133,12 +134,14 @@ class MainActivity : ComponentActivity() {
 //                Pair("model_path", "wakeup/picovoice/models/porcupine_params_zh.pv"),
 //            )
 //        )
-//        wakeUp = ivAssistant.createWakeUp(
-//            WakeUpType.Iflytek,
-//            mapOf(
-//                Pair("keywords", "wakeup/iflytek/xiaozhi.jet")
-//            )
-//        )
+        wakeUp = ivAssistant.createWakeUp(
+            WakeUpType.Iflytek,
+            mapOf(
+                Pair("keywords", "wakeup/iflytek/xiaozhi.jet"),
+                Pair("ivw_threshold", 1450),
+                Pair("keep_live", 1),
+            )
+        )
         wakeUp.initialize()
     }
 
@@ -153,7 +156,10 @@ class MainActivity : ComponentActivity() {
 //        )
 //        asr = ivAssistant.createAsr(AsrType.Baidu, mapOf())
         asr = ivAssistant.createAsr(AsrType.Iflytek, mapOf(
-            Pair("app_id", "02965492"),
+            Pair("language", "zh_cn"),
+            Pair("vad_bos", 10000),
+            Pair("vad_eos", 1000),
+            Pair("asr_ptt", 0)
         ))
         asr.initialize()
     }

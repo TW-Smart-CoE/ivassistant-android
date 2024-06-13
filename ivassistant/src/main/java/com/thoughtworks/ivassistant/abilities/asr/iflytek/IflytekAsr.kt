@@ -91,7 +91,7 @@ class IflytekAsr(
         }
 
         override fun onResult(result: RecognizerResult, isLast: Boolean) {
-            Log.d(TAG, "recognizer result：" + result.resultString + "$isLast")
+//            Log.d(TAG, "recognizer result：" + result.resultString + " $isLast")
             val text: String = if ("cloud".equals(engineType, ignoreCase = true)) {
                 JsonParser.parseGrammarResult(result.resultString)
             } else {
@@ -140,14 +140,14 @@ class IflytekAsr(
         asr.setParameter(SpeechConstant.SUBJECT, null)
         asr.setParameter(SpeechConstant.RESULT_TYPE, "json")
         asr.setParameter(SpeechConstant.ENGINE_TYPE, engineType)
-        asr.setParameter(SpeechConstant.LANGUAGE, "zh_cn")
-        asr.setParameter(SpeechConstant.ACCENT, "mandarin")
-        asr.setParameter(SpeechConstant.VAD_BOS, "4000")
-        asr.setParameter(SpeechConstant.VAD_EOS, "1000")
-        asr.setParameter(SpeechConstant.ASR_PTT, "1")
+        asr.setParameter(SpeechConstant.LANGUAGE, params["language"]?.toString() ?: "zh_cn")
+        asr.setParameter(SpeechConstant.ACCENT, params["accent"]?.toString() ?: "mandarin")
+        asr.setParameter(SpeechConstant.VAD_BOS, params["vad_bos"]?.toString() ?: "4000")
+        asr.setParameter(SpeechConstant.VAD_EOS, params["vad_eos"]?.toString() ?: "1000")
+        asr.setParameter(SpeechConstant.ASR_PTT, params["asr_ptt"]?.toString() ?: "1")
     }
 
     companion object {
-        private const val TAG = "IflytekAsr"
+        private const val TAG = "IV.IflytekAsr"
     }
 }
