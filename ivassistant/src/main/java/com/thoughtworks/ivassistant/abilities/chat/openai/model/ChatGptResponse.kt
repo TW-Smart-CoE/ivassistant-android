@@ -1,4 +1,4 @@
-package com.thoughtworks.ivassistant.abilities.chat.chatgpt.model
+package com.thoughtworks.ivassistant.abilities.chat.openai.model
 
 import com.google.gson.annotations.SerializedName
 

@@ -27,7 +27,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.iflytek.cloud.SpeechConstant
 import com.thoughtworks.ivassistant.IVAssistant
 import com.thoughtworks.ivassistant.abilities.asr.Asr
 import com.thoughtworks.ivassistant.abilities.asr.AsrCallback
@@ -47,6 +46,7 @@ import com.thoughtworks.ivassistantapp.utils.MultiplePermissions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 
 class MainActivity : ComponentActivity() {
     companion object {
@@ -102,7 +102,7 @@ class MainActivity : ComponentActivity() {
 
     private fun createChat() {
         chat = ivAssistant.createChat(
-            ChatType.ChatGpt,
+            ChatType.OpenAI,
             mapOf(
                 Pair("base_url", "https://api.openai.com"),
                 Pair("model", "gpt-3.5-turbo"),
@@ -203,8 +203,8 @@ class MainActivity : ComponentActivity() {
         coroutineScope.launch(Dispatchers.IO) {
             tts.play(text, mapOf(
                 "font_name" to "zhimi_emo",
-                "emotion" to "fear",
-                "intensity" to 1.0f
+                "emotion" to "happy",
+                "intensity" to 0.5f
             ), object : TtsCallback {
                 override fun onPlayEnd() {
                     Log.d(TAG, "onPlayEnd")

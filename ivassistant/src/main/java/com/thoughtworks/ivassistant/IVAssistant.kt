@@ -10,7 +10,7 @@ import com.thoughtworks.ivassistant.abilities.asr.baidu.BaiduAsr
 import com.thoughtworks.ivassistant.abilities.asr.iflytek.IflytekAsr
 import com.thoughtworks.ivassistant.abilities.chat.Chat
 import com.thoughtworks.ivassistant.abilities.chat.ChatType
-import com.thoughtworks.ivassistant.abilities.chat.chatgpt.ChatGpt
+import com.thoughtworks.ivassistant.abilities.chat.openai.OpenAIChat
 import com.thoughtworks.ivassistant.abilities.tts.Tts
 import com.thoughtworks.ivassistant.abilities.tts.TtsType
 import com.thoughtworks.ivassistant.abilities.tts.ali.AliTts
@@ -54,7 +54,7 @@ class IVAssistant(private val context: Context) {
 
     fun createChat(chatType: ChatType, params: Map<String, Any> = emptyMap()): Chat {
         return when (chatType) {
-            ChatType.ChatGpt -> ChatGpt(context, params)
+            ChatType.OpenAI -> OpenAIChat(context, params)
             else -> throw IllegalArgumentException("Not supported type: ${chatType.name}!")
         }
     }

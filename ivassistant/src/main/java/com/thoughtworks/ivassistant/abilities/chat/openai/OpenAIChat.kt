@@ -1,4 +1,4 @@
-package com.thoughtworks.ivassistant.abilities.chat.chatgpt
+package com.thoughtworks.ivassistant.abilities.chat.openai
 
 import android.content.Context
 import android.util.Log
@@ -6,9 +6,9 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.thoughtworks.ivassistant.abilities.chat.Chat
 import com.thoughtworks.ivassistant.abilities.chat.ChatCallback
-import com.thoughtworks.ivassistant.abilities.chat.chatgpt.model.ChatGptRequest
-import com.thoughtworks.ivassistant.abilities.chat.chatgpt.model.ChatGptResponse
-import com.thoughtworks.ivassistant.abilities.chat.chatgpt.model.GptMessage
+import com.thoughtworks.ivassistant.abilities.chat.openai.model.ChatGptRequest
+import com.thoughtworks.ivassistant.abilities.chat.openai.model.ChatGptResponse
+import com.thoughtworks.ivassistant.abilities.chat.openai.model.GptMessage
 import com.thoughtworks.ivassistant.utils.Utils.getManifestMetaData
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -23,16 +23,16 @@ import retrofit2.http.POST
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-class ChatGpt(
+class OpenAIChat(
     private val context: Context,
     private val params: Map<String, Any>,
 ) : Chat {
     interface ChatGptService {
-        @POST("v1/chat/completions")
+        @POST("chat/completions")
         fun chat(@Body request: RequestBody): Call<ChatGptResponse>
     }
 
-    private var baseUrl: String = (params["base_url"] ?: "https://api.openai.com/") as String
+    private var baseUrl: String = (params["base_url"] ?: "https://api.openai.com/v1") as String
     private var maxHistoryLen: Int = (params["max_history_len"] ?: 50) as Int
     private var temperature: Float = (params["temperature"] ?: 1f) as Float
     private var model: String = (params["model"] ?: DEFAULT_MODEL) as String
@@ -202,7 +202,7 @@ class ChatGpt(
     internal class InternalServerException(message: String) : IOException(message)
 
     companion object {
-        private const val TAG = "IV.ChatGpt"
+        private const val TAG = "IV.OpenAIChat"
         private const val ROLE_SYSTEM = "system"
         private const val ROLE_USER = "user"
         private const val ROLE_ASSISTANT = "assistant"
