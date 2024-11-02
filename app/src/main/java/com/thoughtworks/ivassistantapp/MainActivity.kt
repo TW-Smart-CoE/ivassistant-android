@@ -46,7 +46,6 @@ import com.thoughtworks.ivassistantapp.utils.MultiplePermissions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.File
 
 class MainActivity : ComponentActivity() {
     companion object {
@@ -146,21 +145,21 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun createAsr() {
-        //        asr = ivAssistant.createAsr(
-//            AsrType.Ali,
-//            mapOf(
-//                Pair("enable_voice_detection", true),
-//                Pair("max_start_silence", 10000),
-//                Pair("max_end_silence", 800),
-//            )
-//        )
+        asr = ivAssistant.createAsr(
+            AsrType.Ali,
+            mapOf(
+                Pair("enable_voice_detection", true),
+                Pair("max_start_silence", 10000),
+                Pair("max_end_silence", 800),
+            )
+        )
 //        asr = ivAssistant.createAsr(AsrType.Baidu, mapOf())
-        asr = ivAssistant.createAsr(AsrType.Iflytek, mapOf(
-            Pair("language", "zh_cn"),
-            Pair("vad_bos", 10000),
-            Pair("vad_eos", 1000),
-            Pair("asr_ptt", 0)
-        ))
+//        asr = ivAssistant.createAsr(AsrType.Iflytek, mapOf(
+//            Pair("language", "zh_cn"),
+//            Pair("vad_bos", 10000),
+//            Pair("vad_eos", 1000),
+//            Pair("asr_ptt", 0)
+//        ))
         asr.initialize()
     }
 

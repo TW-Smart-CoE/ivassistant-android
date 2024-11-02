@@ -148,7 +148,8 @@ class AliAsrCreator(
         //使用者请根据实际情况选择Android设备的MediaRecorder.AudioSource
         //录音麦克风如何选择,可查看https://developer.android.google.cn/reference/android/media/MediaRecorder.AudioSource
         audioRecorder = AudioRecord(
-            MediaRecorder.AudioSource.DEFAULT, SAMPLE_RATE,
+//            MediaRecorder.AudioSource.DEFAULT, SAMPLE_RATE,
+            MediaRecorder.AudioSource.VOICE_COMMUNICATION, SAMPLE_RATE,
             AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, WAVE_FRAM_SIZE * 4
         )
 
